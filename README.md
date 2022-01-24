@@ -4,7 +4,6 @@ Implementation of "Generating Sentences from a Continuous Space" paper using pyt
 ## Prerequisites
 * Python 2.7
 * Pytorch 0.4.0
-* Torchtext 0.2.0
 
 ## Data
 GISAID data not included; must be stored locally.
