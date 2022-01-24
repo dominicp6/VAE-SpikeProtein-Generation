@@ -7,7 +7,7 @@ Implementation of "Generating Sentences from a Continuous Space" paper using pyt
 * Torchtext 0.2.0
 
 ## Data
-Data not included; must be stored locally.
+GISAID data not included; must be stored locally.
 
 ## Training
 To train the model from the beginning, run:
