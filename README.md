@@ -1,5 +1,5 @@
 # VAE-SpikeProtein-Generation
-Implementation of "Generating Sentences from a Continuous Space" paper using pytorch and torchtext. Generates SARS-COV2 Spike proteins based on the GISAID dataset.
+Implementation of "Generating Sentences from a Continuous Space" paper using pytorch. Generates SARS-COV2 Spike proteins based on the GISAID dataset.
 
 ## Prerequisites
 * Python 2.7
