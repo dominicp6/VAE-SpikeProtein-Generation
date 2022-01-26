@@ -153,7 +153,7 @@ def generate_sentences(n_examples):                             #Generate n sent
             probs = F.softmax(logit[0], dim=1)
             G_inp = T.multinomial(probs,1)
             str += (vocab.itos[G_inp[0][0].item()]+" ")
-        print(str.encode('utf-8'))
+        print(str.encode_single_sequence('utf-8'))
 
 if __name__ == '__main__':
     if opt.to_train:

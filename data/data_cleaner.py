@@ -7,16 +7,19 @@ import pandas as pd
 from Bio import SeqIO
 from collections import defaultdict
 import os
+from Bio.Align.Applications import MuscleCommandline
+from Bio import AlignIO
 
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file
 data_dir = script_dir + '/spike_proteins/'  # relative path of datasets
 
 
-def reduce_fasta_to_unique_sequences(infilename, outfilename, data_directory=data_dir):
+def reduce_fasta_to_unique_sequences_fasta(infilename, outfilename, data_directory=data_dir):
     """
-    Reads a fasta file, identifies the unique sequences and outputs these to new file.
+    Reads a fasta file, identifies the unique sequences and outputs these to new fasta file.
     Also constructs dictionaries of the counts of each unique sequence (sequence_count_data)
     as well as the of number of sequences of each length (sequence_length_dict).
+    The new fasta file contains in its description a count of how common the sequence was.
 
 
     :param infilename: The input fasta file to be processed.
@@ -39,8 +42,9 @@ def reduce_fasta_to_unique_sequences(infilename, outfilename, data_directory=dat
     # sort sequences in decreasing order of frequency of occurrence
     sequence_count_dict = dict(sorted(sequence_count_dict.items(), key=lambda item: item[1], reverse=True))
     with open(data_dir + outfilename, "w") as f:
-        for key in sequence_count_dict:
-            print(key, file=f)
+        for seq,count in sequence_count_dict.items():
+            print(f'>{count}', file=f)
+            print(seq, file=f)
 
     print(f'Processed {infilename}:')
     print(f'Found {number_of_sequences} sequences,')
@@ -49,9 +53,10 @@ def reduce_fasta_to_unique_sequences(infilename, outfilename, data_directory=dat
     return sequence_count_dict, sequence_length_dict
 
 
-def remove_corrupt_sequences(infilename, outfilename, length_cutoff=1200, invalid_amino_acids_cutoff=1):
+def remove_corrupt_sequences_from_fasta(infilename, outfilename, length_cutoff=1200, invalid_amino_acids_cutoff=1):
     """
-    Given an input file, creates a new file with corrupt sequences (i.e. too short, or too many 'X's) removed.
+    Given an input fasta file, creates a new fasta file with corrupt sequences removed.
+    Corrupt sequences are those which are either too short, or contain too many 'X's, indicating low data quality.
 
     :param infilename: The file to be read.
     :param outfilename:  The file to be created.
@@ -62,14 +67,20 @@ def remove_corrupt_sequences(infilename, outfilename, length_cutoff=1200, invali
     with open(data_dir + outfilename, "w") as outfile:
         with open(data_dir + infilename, "r") as infile:
             for sequence in infile:
-                if len(sequence) > length_cutoff and sequence.count('X') < invalid_amino_acids_cutoff:
-                    outfile.write(sequence)
+                # if the line is not a descriptor line
+                if sequence[0] != '>':
+                    # if sequence is not corrupt
+                    if len(sequence) > length_cutoff and sequence.count('X') < invalid_amino_acids_cutoff:
+                        outfile.write(descriptor_line)
+                        outfile.write(sequence)
+                    else:
+                        pass
+                # temporarily store the descriptor
                 else:
-                    pass
+                    descriptor_line = sequence
 
 
 if __name__ == "__main__":
-    sequence_counts, sequence_lengths = reduce_fasta_to_unique_sequences(infilename='1_in_500_spikeprot0112.fasta',
-                                                                         outfilename='1_in_500_unique_sequences.txt')
-    remove_corrupt_sequences(infilename='1_in_500_unique_sequences.txt', outfilename='1_in_500_cleaned.txt')
-    sequence_counts_data_frame = pd.DataFrame(np.array(list(sequence_counts.values())))
+    sequence_counts, sequence_lengths = reduce_fasta_to_unique_sequences_fasta(infilename='1_in_500_spikeprot0112.fasta',
+                                                                               outfilename='1_in_500_unique_sequences.fasta')
+    remove_corrupt_sequences_from_fasta(infilename='1_in_500_unique_sequences.fasta', outfilename='1_in_500_cleaned.fasta')

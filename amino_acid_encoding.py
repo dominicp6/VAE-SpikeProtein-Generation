@@ -1,19 +1,22 @@
 # Adapted from https://github.com/xyjing-works/SequenceEncoding/blob/master/SequenceEncoding.py
 
 import json
+import os.path
+from Bio import SeqIO
 
 
-class SequenceEncoding:
+class SequenceEncoder:
     encoding_types = ['One_hot', 'One_hot_6_bit', 'Binary_5_bit', 'Hydrophobicity_matrix',
                       'Meiler_parameters', 'Acthely_factors', 'PAM250', 'BLOSUM62', 'Miyazawa_energies',
                       'Micheletti_potentials', 'AESNN3', 'ANN4D', 'ProtVec']
     residue_types = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y',
                      'X']
 
-    def __init__(self, encoding_type="One_hot"):
-        if encoding_type not in SequenceEncoding.encoding_types:
+    def __init__(self, encoding_type="One_hot", project_directory=os.path.dirname(os.path.realpath(__file__))):
+        if encoding_type not in SequenceEncoder.encoding_types:
             raise Exception("Encoding type \'%s\' not found" % encoding_type)
         self.encoding_type = encoding_type
+        self.project_directory = project_directory
 
     def get_ProtVec_encoding(self, ProtVec, seq, overlap=True):
         if overlap:
@@ -37,24 +40,45 @@ class SequenceEncoding:
             encodings = [encodings_1, encodings_2, encodings_3]
         return encodings
 
-    def get_encoding(self, seq, overlap=True):
+    def get_encoding(self, seq, overlap=True, zero_void_residues=True):
         seq = seq.upper()
-        with open("data/encodings/%s.json" % self.encoding_type, 'r') as load_f:
+        with open(self.project_directory+"/data/encodings/%s.json" % self.encoding_type, 'r') as load_f:
             encoding = json.load(load_f)
         encoding_data = []
         if self.encoding_type == "ProtVec":
             encoding_data = self.get_ProtVec_encoding(encoding, seq, overlap)
         else:
             for res in seq:
-                if res not in SequenceEncoding.residue_types:
+                # decide how to deal with void residues that arise from sequence alignment
+                if res == "-":
+                    if zero_void_residues:
+                        encoding_data.append({res: [0]*encoding['dimension']})
+                        break
+                    else:
+                        encoding_data.append({'X': encoding['X']})
+                        break
+                if res not in SequenceEncoder.residue_types:
                     res = "X"
                 encoding_data.append({res: encoding[res]})
 
         return encoding_data
 
-    def encode(self, seq):
+    def encode_single_sequence(self, seq):
         return [digit for dictionary in self.get_encoding(seq) for amino_acid, encoding_vector in dictionary.items() for
                 digit in encoding_vector]
+
+    def _convert_numeric_encoding_to_string_encoding(self, encoding):
+        return ",".join([str(digit) for digit in encoding])
+
+    def encode_from_fasta_file(self, infilename, outfilename, data_dir = '/data/spike_proteins/'):
+        fasta_sequences = SeqIO.parse(open(self.project_directory + data_dir + infilename), 'fasta')
+        with open(self.project_directory + data_dir + outfilename, "w") as out_file:
+            for fasta in fasta_sequences:
+                name, sequence = fasta.id, str(fasta.seq)
+                encoded_seq = self.encode_single_sequence(sequence)
+                encoded_seq = self._convert_numeric_encoding_to_string_encoding(encoded_seq)
+                print(f'>{name}', file=out_file)
+                print(encoded_seq, file=out_file)
 
 
 if __name__ == "__main__":
@@ -73,11 +97,11 @@ if __name__ == "__main__":
                                   "QKEIDRLNEVAKNLNESLIDLQELGKYEQYIKWPWYIWLGFIAGLIAIVMVTIMLCCMTSCCSCLKGCCSCGSCCKFDEDDSEPVLKGVKLHYT"
 
     # example One-Hot encoding
-    one_hot_encoder = SequenceEncoding(encoding_type='One_hot')
-    encoded_sequence = one_hot_encoder.encode(test_spike_protein_sequence)
+    one_hot_encoder = SequenceEncoder(encoding_type='One_hot')
+    encoded_sequence = one_hot_encoder.encode_single_sequence(test_spike_protein_sequence)
     print(encoded_sequence)
 
     # example PAM250 encoding
-    PAM250_encoder = SequenceEncoding(encoding_type='PAM250')
-    encoded_sequence = PAM250_encoder.encode(test_spike_protein_sequence)
+    PAM250_encoder = SequenceEncoder(encoding_type='PAM250')
+    encoded_sequence = PAM250_encoder.encode_single_sequence(test_spike_protein_sequence)
     print(encoded_sequence)
