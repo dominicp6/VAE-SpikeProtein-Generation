@@ -3,7 +3,6 @@
 import json
 import numpy as np
 import os.path
-import pandas as pd
 from Bio import SeqIO
 
 def read_encoding_file(infilename):
@@ -19,8 +18,7 @@ def read_encoding_file(infilename):
                 else:
                     encoded_sequences = np.array([float(digit) for digit in line.split(',')])
 
-    print(encoded_sequences)
-    return encoded_sequences
+    return descriptors, encoded_sequences
 
 
 class SequenceEncoder:
@@ -92,20 +90,21 @@ class SequenceEncoder:
         fasta_sequences = SeqIO.parse(open(self.project_directory + data_dir + infilename), 'fasta')
         number_of_sequences = len(list(fasta_sequences))
         encoded_sequences = None
+        descriptors = []
         fasta_sequences = SeqIO.parse(open(self.project_directory + data_dir + infilename), 'fasta')
         with open(self.project_directory + data_dir + outfilename, "w") as out_file:
             for index, fasta in enumerate(fasta_sequences):
-                name, sequence = fasta.id, str(fasta.seq)
+                identifier, sequence = fasta.id, str(fasta.seq)
                 encoded_seq = self.encode_single_sequence(sequence)
                 if index == 0:
                     encoded_sequences = np.zeros([number_of_sequences, len(encoded_seq)])
                 encoded_sequences[index, :] = encoded_seq
                 encoded_seq = self._convert_numeric_encoding_to_string_encoding(encoded_seq)
-
-                print(f'>{name}', file=out_file)
+                descriptors.append(int(''.join(filter(str.isdigit, identifier))))
+                print(f'>{identifier}', file=out_file)
                 print(encoded_seq, file=out_file)
 
-        return encoded_sequences
+        return descriptors, encoded_sequences
 
 
 if __name__ == "__main__":

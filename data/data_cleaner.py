@@ -2,13 +2,9 @@
 This script provides functions which process GISAID spike protein fasta datafiles to produce
 cleaner, more manageable datasets.
 """
-import numpy as np
-import pandas as pd
 from Bio import SeqIO
 from collections import defaultdict
 import os
-from Bio.Align.Applications import MuscleCommandline
-from Bio import AlignIO
 
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file
 data_dir = script_dir + '/spike_proteins/'  # relative path of datasets
@@ -33,8 +29,7 @@ def reduce_fasta_to_unique_sequences_fasta(infilename, outfilename, data_directo
     sequence_length_dict = defaultdict(lambda: 0)
     number_of_sequences = 0
     for fasta in fasta_sequences:
-        name, sequence = fasta.id, str(fasta.seq)[
-                                   :-1]  # remove the last character from the sequence (which is an '*', not an amino acid)
+        identifier, sequence = fasta.id, str(fasta.seq)[:-1]  # remove the last character from the sequence (which is an '*', not an amino acid)
         sequence_count_dict[sequence] += 1
         sequence_length_dict[len(sequence)] += 1
         number_of_sequences += 1
