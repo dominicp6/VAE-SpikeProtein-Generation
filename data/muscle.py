@@ -17,4 +17,4 @@ def muscle_align_fasta_file(infilename,
 
 
 if __name__ == "__main__":
-    muscle_align_fasta_file(infilename='1_in_500_cleaned.fasta', outfilename='1_in_500_cleaned_aligned.afa')
+    muscle_align_fasta_file(infilename='1_in_50_cleaned.fasta', outfilename='1_in_50_cleaned_aligned.afa')
