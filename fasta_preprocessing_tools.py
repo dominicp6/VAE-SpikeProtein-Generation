@@ -6,6 +6,7 @@ from Bio import SeqIO
 from Bio.Align.Applications import MuscleCommandline
 from collections import defaultdict
 import os
+from tqdm import tqdm
 
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (DO NOT CHANGE)
 
@@ -32,7 +33,7 @@ def remove_incomplete_sequences_from_fasta(infile,
 
     with open(data_directory + outfile, "w") as outfile:
         with open(data_directory + infile, "r") as infile:
-            for sequence in infile:
+            for sequence in tqdm(infile):
                 # if the line is not a descriptor line
                 if sequence[0] != '>':
                     # if sequence is not corrupt
@@ -61,7 +62,7 @@ def downsample_fasta_file(infile,
     """
     with open(data_directory + infile, "r") as original_fasta_file:
         with open(data_directory + outfile, "w") as downsampled_fasta_file:
-            for line_index, line in enumerate(original_fasta_file):
+            for line_index, line in tqdm(enumerate(original_fasta_file)):
                 # factor of 2 because each sequence also has an id row in a fasta file
                 print_every = 2 * downsample_factor
                 if line_index % print_every == 0 or (line_index - 1) % print_every == 0:
@@ -94,7 +95,7 @@ def reduce_to_unique_sequences(infile,
     sequence_length_dict = defaultdict(lambda: 0)   # dict(length_of_sqn (int): counts with this length (int))
     number_of_sequences = 0
 
-    for seq_obj in fasta_sequences:
+    for seq_obj in tqdm(fasta_sequences):
         identifier, sequence = seq_obj.id, str(seq_obj.seq)
         # remove non-sequence character suffixes if they exist
         if not sequence[-1].isalpha() and sequence[-1] != '-':

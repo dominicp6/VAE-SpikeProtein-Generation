@@ -3,7 +3,7 @@ import torch as T
 import os
 from model import VAE
 from dataset import get_iterators
-from helper_functions import get_cuda, get_sentences_in_batch
+from helper_functions import get_cuda
 import torch.nn.functional as F
 import math
 import argparse

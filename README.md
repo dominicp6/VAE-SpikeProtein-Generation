@@ -2,7 +2,7 @@
 Implementation of "Generating Sentences from a Continuous Space" paper using pytorch. Generates SARS-COV2 Spike proteins based on the GISAID dataset.
 
 ## Prerequisites
-* Python 2.7
+* Python 3.9
 * Pytorch 0.4.0
 
 ## Data
