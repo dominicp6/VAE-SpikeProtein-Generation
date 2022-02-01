@@ -8,7 +8,7 @@ from Bio import SeqIO
 def read_encoding_file(infilename):
     descriptors = []
     encoded_sequences = None
-    with open(os.path.dirname(os.path.realpath(__file__))+'/data/spike_proteins/'+infilename, "r") as in_file:
+    with open(os.path.dirname(os.path.realpath(__file__))+'/data/spike_protein_sequences/'+infilename, "r") as in_file:
         for line in in_file:
             if line[0] == ">":
                 descriptors.append(int(''.join(filter(str.isdigit, line))))
@@ -86,7 +86,7 @@ class SequenceEncoder:
     def _convert_numeric_encoding_to_string_encoding(self, encoding):
         return ",".join([str(digit) for digit in encoding])
 
-    def encode_from_fasta_file(self, infilename, outfilename, data_dir = '/data/spike_proteins/'):
+    def encode_from_fasta_file(self, infilename, outfilename, data_dir = '/data/spike_protein_sequences/'):
         fasta_sequences = SeqIO.parse(open(self.project_directory + data_dir + infilename), 'fasta')
         number_of_sequences = len(list(fasta_sequences))
         encoded_sequences = None

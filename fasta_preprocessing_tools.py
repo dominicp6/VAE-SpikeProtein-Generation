@@ -13,7 +13,7 @@ script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (D
 path_to_muscle_executable = '/home/dominic/miniconda3/pkgs/muscle-3.8.1551-h7d875b9_6/bin/muscle'
 
 # relative path of datasets
-data_dir = script_dir + '/data/spike_proteins/'
+data_dir = script_dir + '/data/spike_protein_sequences/'
 
 
 def remove_incomplete_sequences_from_fasta(infile,

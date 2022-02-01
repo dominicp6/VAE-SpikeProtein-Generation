@@ -19,7 +19,7 @@ class MyDataset(data.Dataset):
 
 def get_iterators(opt):
     sequence_field = data.Field(init_token=opt.start_token, eos_token=opt.end_token, lower=False, batch_first=True)
-    train_data, val_data = MyDataset.splits(path="../data/spike_proteins", train ="1_in_500_cleaned.txt", test="1_in_500_cleaned.txt", sequence_field=sequence_field)
+    train_data, val_data = MyDataset.splits(path="../data/spike_protein_sequences", train ="1_in_500_cleaned.txt", test="1_in_500_cleaned.txt", sequence_field=sequence_field)
     sequence_field.build_vocab(train_data, val_data, max_size=opt.n_vocab-4, vectors='glove.6B.300d')
     train_vocab = sequence_field.vocab
 

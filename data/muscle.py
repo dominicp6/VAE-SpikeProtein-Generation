@@ -3,7 +3,7 @@ import subprocess
 
 path_to_muscle_executable = '/home/dominic/miniconda3/pkgs/muscle-3.8.1551-h7d875b9_6'
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file
-data_dir = script_dir + '/spike_proteins/'  # relative path of datasets
+data_dir = script_dir + '/spike_protein_sequences/'  # relative path of datasets
 
 
 def muscle_align_fasta_file(infilename,
