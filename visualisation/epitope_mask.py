@@ -8,6 +8,11 @@ from DSSPparser import parseDSSP
 from biopandas.pdb import PandasPdb
 import pandas as pd
 
+# from Bio import pairwise2
+#     alignments = pairwise2.align.globalxx("ACCGT", "ACG")
+
+
+
 def fasta_to_df(fasta_src):
     for fasta in SeqIO.parse(fasta_src, "fasta"):
         name, sequence = fasta.id, str(fasta.seq)
@@ -29,16 +34,18 @@ def dssp_to_SASA(dssp_src):
     dssp_parser = parseDSSP(dssp_src)
     dssp_parser.parse()
     pddict = dssp_parser.dictTodataframe()
-    #sasa_from_dssp = pddict[['resnum', 'inscode', 'chain', 'aa', 'acc']]
-    sasa_from_dssp = pddict[['inscode', 'acc']]
-    sasa_from_dssp = sasa_from_dssp.groupby(by = ['inscode']).median()
+    sasa_from_dssp = pddict[['resnum', 'inscode', 'chain', 'aa', 'acc']]
+    #sasa_from_dssp = pddict[['inscode', 'acc']]
+    #sasa_from_dssp = sasa_from_dssp.groupby(by = ['inscode'])[['acc']].median()
     return sasa_from_dssp
 
 dssp_df = dssp_to_SASA(spike_dssp_src)
 
-
-
 fasta_df = fasta_to_df(spike_sequence_src)
+
+dssp_df.to_csv(r"../data/spike_protein_pdb/dssp_test.csv", index=False, na_rep='NULL')
+fasta_df.to_csv(r"../data/spike_protein_pdb/fasta_test.csv", index=False, na_rep='NULL')
+print(fasta_df)
 
 print(dssp_df.dtypes)
 
