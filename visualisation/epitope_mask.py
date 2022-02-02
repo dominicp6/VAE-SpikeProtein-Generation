@@ -1,27 +1,31 @@
-spike_structure_src = r"../data/spike_protein_pdb/7n1u.pdb"
-spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
-spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
-
-from Bio.PDB import *
 from Bio import SeqIO
 from DSSPparser import parseDSSP
-from biopandas.pdb import PandasPdb
 import pandas as pd
-
-# from Bio import pairwise2
-#     alignments = pairwise2.align.globalxx("ACCGT", "ACG")
-
+from collections import defaultdict
+from Bio import pairwise2
 
 
-def fasta_to_df(fasta_src):
-    for fasta in SeqIO.parse(fasta_src, "fasta"):
-        name, sequence = fasta.id, str(fasta.seq)
-    pos = [str(i) for i in list(range(1, len(sequence)+1))]
-    #print(pos)
-    seq_df = pd.DataFrame(list(zip(sequence, pos)), columns= ['sequence','position'])
+def convert_fasta_file_to_df(fasta_src):
+    number_of_sequences_found = 0
+    sequence_length = None
+    sequence = None
+    for sequence_entry in SeqIO.parse(fasta_src, "fasta"):
+        name, sequence = sequence_entry.id, str(sequence_entry.seq)
+        number_of_sequences_found += 1
+        sequence_length = len(sequence)
+
+    if number_of_sequences_found != 1:
+        raise ValueError('fasta file should have only a single sequence')
+
+    # Create an ID list for the sequences
+    pos = [str(i) for i in list(range(1, sequence_length+1))]
+
+    seq_df = pd.DataFrame(list(zip(sequence, pos)), columns=['residue', 'position'])
+
     return seq_df
 
-def dssp_to_SASA(dssp_src):
+
+def extract_SASA_from_dssp(dssp_src):
     '''
     #print(pddict.columns)
     #Index(['resnum', 'inscode', 'chain', 'aa', 'struct', 'structdetails', 'bp1',
@@ -33,79 +37,70 @@ def dssp_to_SASA(dssp_src):
     '''
     dssp_parser = parseDSSP(dssp_src)
     dssp_parser.parse()
-    pddict = dssp_parser.dictTodataframe()
-    sasa_from_dssp = pddict[['resnum', 'inscode', 'chain', 'aa', 'acc']]
-    #sasa_from_dssp = pddict[['inscode', 'acc']]
-    #sasa_from_dssp = sasa_from_dssp.groupby(by = ['inscode'])[['acc']].median()
-    return sasa_from_dssp
+    dssp_parsed_dict = dssp_parser.dictTodataframe()
+    sasa_from_dssp = dssp_parsed_dict[['resnum', 'inscode', 'chain', 'aa', 'acc']]
+    #sasa_from_dssp = dssp_parsed_dict[['inscode', 'acc']]
+    #sasa_from_dssp = sasa_from_dssp.groupby(by = ['inscode']).median()
 
-dssp_df = dssp_to_SASA(spike_dssp_src)
+    solvent_accessibility_dictionary = defaultdict(lambda: [])
+    for entry in sasa_from_dssp.iterrows():
+        amino_acid_residue_number = entry[1].inscode
+        amino_acid = entry[1].aa
+        solvent_accessibility = entry[1].acc
+        solvent_accessibility_dictionary[amino_acid_residue_number].append(solvent_accessibility)
 
-fasta_df = fasta_to_df(spike_sequence_src)
+    averaged_solvent_accessibility = dict()
+    for residue_number, solvent_accessibilities in solvent_accessibility_dictionary.items():
+        averaged_solvent_accessibility[residue_number] = np.median(solvent_accessibilities)
 
-dssp_df.to_csv(r"../data/spike_protein_pdb/dssp_test.csv", index=False, na_rep='NULL')
-fasta_df.to_csv(r"../data/spike_protein_pdb/fasta_test.csv", index=False, na_rep='NULL')
-print(fasta_df)
-
-print(dssp_df.dtypes)
-
-df = fasta_df.merge(dssp_df, how="left", left_on='position', right_on='inscode')
-print(df.head(20))
-
-epitope_mask = df[['sequence', 'acc']]
-
-df.to_csv(r"../data/spike_protein_pdb/epitope_mask.csv", index=False, na_rep='NULL')
-
-print(epitope_mask.head(20))
+    return averaged_solvent_accessibility
 
 
-#for model in structure:
-#    for chain in model:
-        #print(chain)
- #       for residue in chain:
-          # print(residue)
-            #for atom in residue:
-                #print(atom)
+def align_dssp_to_fasta_and_return_epitope_mask(fasta_df, dssp_df):
+    fasta_sequence = fasta_df.residue
+    dssp_sequence = dssp_df.aa
+
+    print(fasta_sequence)
+    print(dssp_sequence)
 
 
-#Terminal command:  mkdssp -i original_covid.pdb -o original_covid.dssp
 
-# Read in dssp file and construct solvent accessibility vector
+    alignments = pairwise2.align.globalxx(fasta_sequence, dssp_sequence)
 
-def extract_solvent_accessibility_vector_from_dssp(sequence_src, structure_src):
+    best_alignment = alignments[0]
 
-    structure = parser.get_structure('X', structure_src)
-    model = structure[0]
-    #dssp = DSSP(model, spike_structure_src)
-    #print(vars(dssp))
-
-    resolution = structure.header['resolution']
-    keywords = structure.header['keywords']
-    print(resolution, keywords)
-
-
-extract_solvent_accessibility_vector_from_dssp(spike_sequence_src, spike_structure_src)
+    print(best_alignment)
+    print(best_alignment.__vars__)
 
 
 
 
-def pdb_to_residues(pdb_src):
-    ppdb = PandasPdb()
-    pdb_df = ppdb.read_pdb(pdb_src)
-    print(pdb_df.df['ATOM'].head(3))
+if __name__ == "__main__":
+    spike_structure_src = r"../data/spike_protein_pdb/7n1u.pdb"
+    spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
+    spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
 
-    print(pdb_df)
-    residues_from_pdb = pdb_df[[""]]
+    # 1. Read and covert pdb to dssp
+    # Terminal command:  mkdssp -i original_covid.pdb -o original_covid.dssp
 
-    return residues_from_pdb
+    # 2. Extract solvent accessibility from dssp
+    print('DSSP')
+    dssp_df = extract_SASA_from_dssp(spike_dssp_src)
+    dssp_df.to_csv(r"../data/spike_protein_pdb/dssp_test.csv", index=False, na_rep='NULL')
+    print(dssp_df.dtypes)
 
+    # 3. Align fasta with dssp solvent accessibility, output epitope mask
+    print('FASTA')
+    fasta_df = convert_fasta_file_to_df(spike_sequence_src)
+    fasta_df.to_csv(r"../data/spike_protein_pdb/fasta_test.csv", index=False, na_rep='NULL')
+    print(fasta_df)
 
+    align_dssp_to_fasta_and_return_epitope_mask(fasta_df, dssp_df)
+    # df = fasta_df.merge(dssp_df, how="left", left_on='position', right_on='inscode')
+    # print(df.head(20))
+    #
+    # epitope_mask = df[['sequence', 'acc']]
+    #
+    # df.to_csv(r"../data/spike_protein_pdb/epitope_mask.csv", index=False, na_rep='NULL')
 
-print(pdb_to_residues(spike_structure_src))
-
-parser = PDBParser()
-
-structure = parser.get_structure('X',spike_structure_src)
-#io = PDBIO()
-print(structure['REMARK'])
 
