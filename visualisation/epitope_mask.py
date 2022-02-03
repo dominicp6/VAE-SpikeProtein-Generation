@@ -85,7 +85,12 @@ def align_sequences(sequence1, sequence2):
     return sequence1_aligned, sequence2_aligned
 
 
-def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file, dssp_file, data_directory):
+def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file,
+                                                         dssp_file,
+                                                         data_directory,
+                                                         normalise=True,
+                                                         threshold=None):
+    # TODO: complete description
     """
     Pairwise sequence aligns a reference fasta sequence to a dssp sequence and returns
     a solvent accessibility vector for the fasta sequence.
@@ -110,6 +115,15 @@ def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file, dssp_file, 
             else:
                 fasta_solvent_accessibility_vector.append(0)
 
+    fasta_solvent_accessibility_vector = np.array(fasta_solvent_accessibility_vector)
+    if threshold is not None:
+        assert 1 > threshold > 0, "threshold must be a float between 0 and 1"
+        max_sa = np.max(fasta_solvent_accessibility_vector)
+        fasta_solvent_accessibility_vector = [0 if entry/max_sa < threshold else 1
+                                              for entry in fasta_solvent_accessibility_vector]
+    if normalise:
+        fasta_solvent_accessibility_vector /= np.max(fasta_solvent_accessibility_vector)
+
     return fasta_solvent_accessibility_vector
 
 
@@ -122,5 +136,4 @@ if __name__ == "__main__":
     SAV = get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file='rcsb_pdb_7N1U.fasta',
                                                                dssp_file='7n1u.dssp',
                                                                data_directory=data_dir)
-
     print(SAV)
