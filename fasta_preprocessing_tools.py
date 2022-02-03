@@ -2,10 +2,12 @@
 This script provides functions which preprocess fasta datafiles by removing incomplete sequences,
 collecting repeats and aligning misaligned sequences with MUSCLE.
 """
+import pandas as pd
 from Bio import SeqIO
 from Bio.Align.Applications import MuscleCommandline
 from collections import defaultdict
 import os
+import numpy as np
 from tqdm import tqdm
 
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (DO NOT CHANGE)
@@ -93,27 +95,45 @@ def reduce_to_unique_sequences(infile,
 
     sequence_count_dict = defaultdict(lambda: 0)    # dict(sequence (str): counts of sequence (int))
     sequence_length_dict = defaultdict(lambda: 0)   # dict(length_of_sqn (int): counts with this length (int))
+    sequence_date_dict = defaultdict(lambda: [])    # dict(sequence (str): dates that sequence was recorded)
     number_of_sequences = 0
 
     for seq_obj in tqdm(fasta_sequences):
         identifier, sequence = seq_obj.id, str(seq_obj.seq)
+
         # remove non-sequence character suffixes if they exist
         if not sequence[-1].isalpha() and sequence[-1] != '-':
             sequence = sequence[:-1]
+
+        try:
+            date_string = identifier.split('|')[2]
+            date = np.datetime64(date_string)
+            sequence_date_dict[sequence].append(date)
+        except:
+            pass
+
         sequence_count_dict[sequence] += 1
         sequence_length_dict[len(sequence)] += 1
         number_of_sequences += 1
 
     # sort sequences in decreasing order of frequency of occurrence
     sequence_count_dict = dict(sorted(sequence_count_dict.items(), key=lambda item: item[1], reverse=True))
+
+    # compute median date of each sequence
+    for sequence, date_list in sequence_date_dict.items():
+        median_date = pd.Series(date_list, dtype='datetime64[ns]').quantile(0.5, interpolation="midpoint")
+        sequence_date_dict[sequence] = median_date
+
     with open(data_directory + outfile, "w") as f:
         for seq, count in sequence_count_dict.items():
-            print(f'>{count}', file=f)
+            seq_date = sequence_date_dict[seq]
+            print(f'>{count}|{seq_date}', file=f)
             print(seq, file=f)
 
     print(f'Processed {infile}:')
     print(f'Found {number_of_sequences} sequences,')
     print(f'of which {len(sequence_count_dict)} are unique sequences.')
+
 
     return sequence_count_dict, sequence_length_dict
 
@@ -164,8 +184,14 @@ def reduce_and_align_sequences(infile: str,
 
 
 if __name__ == "__main__":
-    reduce_and_align_sequences(infile='spikeprot0112.fasta',
+    # reduce_and_align_sequences(infile='spikeprot0112.fasta',
+    #                            outfile='aligned_spike_proteins.fasta',
+    #                            reduction_factor=100,
+    #                            length_cutoff=1200,
+    #                            invalid_amino_acids_cutoff=1)
+
+    reduce_and_align_sequences(infile='1_in_500_spikeprot0112.fasta',
                                outfile='aligned_spike_proteins.fasta',
-                               reduction_factor=100,
+                               reduction_factor=1,
                                length_cutoff=1200,
                                invalid_amino_acids_cutoff=1)
