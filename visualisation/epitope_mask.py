@@ -1,111 +1,139 @@
-spike_structure_src = r"../data/spike_protein_pdb/7n1u.pdb"
-spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
-spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
-
-from Bio.PDB import *
+import numpy as np
 from Bio import SeqIO
 from DSSPparser import parseDSSP
-from biopandas.pdb import PandasPdb
 import pandas as pd
-
-# from Bio import pairwise2
-#     alignments = pairwise2.align.globalxx("ACCGT", "ACG")
-
+from collections import defaultdict
+from Bio import pairwise2
 
 
-def fasta_to_df(fasta_src):
-    for fasta in SeqIO.parse(fasta_src, "fasta"):
-        name, sequence = fasta.id, str(fasta.seq)
-    pos = [str(i) for i in list(range(1, len(sequence)+1))]
-    #print(pos)
-    seq_df = pd.DataFrame(list(zip(sequence, pos)), columns= ['sequence','position'])
-    return seq_df
+def get_fasta_sequence_from_file(fasta_file):
+    """
+    Reads a fasta file containing a single sequence and returns the sequence string.
+    """
+    number_of_sequences_found = 0
+    sequence = None
+    for sequence_entry in SeqIO.parse(fasta_file, "fasta"):
+        _, sequence = sequence_entry.id, str(sequence_entry.seq)
+        number_of_sequences_found += 1
 
-def dssp_to_SASA(dssp_src):
-    '''
-    #print(pddict.columns)
-    #Index(['resnum', 'inscode', 'chain', 'aa', 'struct', 'structdetails', 'bp1',
-    #       'bp2', 'acc', 'h_nho1', 'h_ohn1', 'h_nho2', 'h_ohn2', 'tco', 'kappa',
-    #   'alpha', 'phi', 'psi', 'xca', 'yca', 'zca', 'rcsb_given_chain',
-    #        'author_given_chain'],      dtype='object'
-    :param dssp_src:
-    :return:
-    '''
-    dssp_parser = parseDSSP(dssp_src)
+    if number_of_sequences_found != 1:
+        raise ValueError('fasta file should have only a single sequence')
+
+    return sequence
+
+
+def extract_solvent_accessibility_from_dssp_file(dssp_file):
+    """
+    Parses a dssp file to find the solvent accessibility of each residue.
+    """
+    dssp_parser = parseDSSP(dssp_file)
     dssp_parser.parse()
-    pddict = dssp_parser.dictTodataframe()
-    sasa_from_dssp = pddict[['resnum', 'inscode', 'chain', 'aa', 'acc']]
-    #sasa_from_dssp = pddict[['inscode', 'acc']]
-    #sasa_from_dssp = sasa_from_dssp.groupby(by = ['inscode'])[['acc']].median()
-    return sasa_from_dssp
+    dssp_parsed_dict = dssp_parser.dictTodataframe()
+    dssp_parsed_dict = dssp_parsed_dict[['resnum', 'inscode', 'chain', 'aa', 'acc']]
 
-dssp_df = dssp_to_SASA(spike_dssp_src)
+    solvent_accessibility_of_residue = defaultdict(lambda: [])
+    residue_number_to_amino_acid = defaultdict(lambda: '')
+    for entry in dssp_parsed_dict.iterrows():
+        amino_acid = entry[1].aa  # position [0] is ID, position [1] is row data
 
-fasta_df = fasta_to_df(spike_sequence_src)
+        # the ! character is used to mark sequence breaks in dssp files; we ignore it
+        if amino_acid == "!":
+            continue
 
-dssp_df.to_csv(r"../data/spike_protein_pdb/dssp_test.csv", index=False, na_rep='NULL')
-fasta_df.to_csv(r"../data/spike_protein_pdb/fasta_test.csv", index=False, na_rep='NULL')
-print(fasta_df)
+        # In dssp files CYS amino acids are labelled with lower case letters
+        if amino_acid.islower():
+            # relabel lower case letter with one-letter code for CYS
+            amino_acid = 'C'
 
-print(dssp_df.dtypes)
+        amino_acid_residue_number = int(entry[1].inscode)
 
-df = fasta_df.merge(dssp_df, how="left", left_on='position', right_on='inscode')
-print(df.head(20))
+        residue_number_to_amino_acid[amino_acid_residue_number] = amino_acid
+        solvent_accessibility = entry[1].acc
+        solvent_accessibility_of_residue[amino_acid_residue_number].append(int(solvent_accessibility))
 
-epitope_mask = df[['sequence', 'acc']]
+    averaged_solvent_accessibility_of_residue = dict()
+    for residue_number, solvent_accessibilities in solvent_accessibility_of_residue.items():
+        averaged_solvent_accessibility_of_residue[residue_number] = np.median(solvent_accessibilities)
 
-df.to_csv(r"../data/spike_protein_pdb/epitope_mask.csv", index=False, na_rep='NULL')
+    dssp_dictionary = {'residue_number': list(averaged_solvent_accessibility_of_residue.keys()),
+                       'solvent_accessibility': list(averaged_solvent_accessibility_of_residue.values()),
+                       'amino_acid': [residue_number_to_amino_acid[residue]
+                                      for residue in averaged_solvent_accessibility_of_residue.keys()]}
 
-print(epitope_mask.head(20))
-
-
-#for model in structure:
-#    for chain in model:
-        #print(chain)
- #       for residue in chain:
-          # print(residue)
-            #for atom in residue:
-                #print(atom)
-
-
-#Terminal command:  mkdssp -i original_covid.pdb -o original_covid.dssp
-
-# Read in dssp file and construct solvent accessibility vector
-
-def extract_solvent_accessibility_vector_from_dssp(sequence_src, structure_src):
-
-    structure = parser.get_structure('X', structure_src)
-    model = structure[0]
-    #dssp = DSSP(model, spike_structure_src)
-    #print(vars(dssp))
-
-    resolution = structure.header['resolution']
-    keywords = structure.header['keywords']
-    print(resolution, keywords)
+    return pd.DataFrame(dssp_dictionary)
 
 
-extract_solvent_accessibility_vector_from_dssp(spike_sequence_src, spike_structure_src)
+def pandas_series_to_string(series):
+    """
+    Concatenates the entries of a pandas series into a string.
+    """
+    string = ""
+    for entry in series:
+        string += str(entry)
+
+    return string
 
 
+def align_sequences(sequence1, sequence2):
+    alignments = pairwise2.align.globalxx(sequence1, sequence2)
+
+    best_alignment = alignments[0]
+
+    sequence1_aligned = best_alignment.seqA
+    sequence2_aligned = best_alignment.seqB
+
+    return sequence1_aligned, sequence2_aligned
 
 
-def pdb_to_residues(pdb_src):
-    ppdb = PandasPdb()
-    pdb_df = ppdb.read_pdb(pdb_src)
-    print(pdb_df.df['ATOM'].head(3))
+def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file,
+                                                         dssp_file,
+                                                         data_directory,
+                                                         normalise=True,
+                                                         threshold=None):
+    # TODO: complete description
+    """
+    Pairwise sequence aligns a reference fasta sequence to a dssp sequence and returns
+    a solvent accessibility vector for the fasta sequence.
+    """
+    fasta_sequence = get_fasta_sequence_from_file(data_directory+fasta_file)
+    dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(data_directory+dssp_file)
+    dssp_sequence = pandas_series_to_string(dssp_solvent_accessibility.amino_acid)
 
-    print(pdb_df)
-    residues_from_pdb = pdb_df[[""]]
+    aligned_fasta_sequence, aligned_dssp_sequence = align_sequences(fasta_sequence, dssp_sequence)
 
-    return residues_from_pdb
+    position_in_dssp_sequence = 0
+    fasta_solvent_accessibility_vector = []
+
+    for index, dssp_amino_acid in enumerate(aligned_dssp_sequence):
+        if aligned_fasta_sequence[index] == "-":
+            continue
+        else:
+            if dssp_amino_acid != "-":
+                solvent_accessibility_of_amino_acid = dssp_solvent_accessibility.solvent_accessibility[position_in_dssp_sequence]
+                fasta_solvent_accessibility_vector.append(solvent_accessibility_of_amino_acid)
+                position_in_dssp_sequence += 1
+            else:
+                fasta_solvent_accessibility_vector.append(0)
+
+    fasta_solvent_accessibility_vector = np.array(fasta_solvent_accessibility_vector)
+    if threshold is not None:
+        assert 1 > threshold > 0, "threshold must be a float between 0 and 1"
+        max_sa = np.max(fasta_solvent_accessibility_vector)
+        fasta_solvent_accessibility_vector = [0 if entry/max_sa < threshold else 1
+                                              for entry in fasta_solvent_accessibility_vector]
+    if normalise:
+        fasta_solvent_accessibility_vector /= np.max(fasta_solvent_accessibility_vector)
+
+    return fasta_solvent_accessibility_vector
 
 
+if __name__ == "__main__":
+    data_dir = "../data/spike_protein_pdb/"
+    spike_structure_src = r"../data/spike_protein_pdb/7n1u.pdb"
+    spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
+    spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
 
-print(pdb_to_residues(spike_structure_src))
-
-parser = PDBParser()
-
-structure = parser.get_structure('X',spike_structure_src)
-#io = PDBIO()
-print(structure['REMARK'])
-
+    SAV = get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file='rcsb_pdb_7N1U.fasta',
+                                                               dssp_file='7n1u.dssp',
+                                                               data_directory=data_dir)
+    print(SAV)
