@@ -5,34 +5,27 @@ import pandas as pd
 from collections import defaultdict
 from Bio import pairwise2
 
-#TODO: do we even need this function
-def convert_fasta_file_to_df(fasta_file):
+
+def get_fasta_sequence_from_file(fasta_file):
     """
-    Reads a fasta file containing a single sequence and coverts that sequence to a pandas data frame.
+    Reads a fasta file containing a single sequence and returns the sequence string.
     """
     number_of_sequences_found = 0
-    sequence_length = None
     sequence = None
     for sequence_entry in SeqIO.parse(fasta_file, "fasta"):
-        name, sequence = sequence_entry.id, str(sequence_entry.seq)
+        _, sequence = sequence_entry.id, str(sequence_entry.seq)
         number_of_sequences_found += 1
-        sequence_length = len(sequence)
 
     if number_of_sequences_found != 1:
         raise ValueError('fasta file should have only a single sequence')
 
-    # Create an ID list for the sequences
-    pos = [str(i) for i in list(range(1, sequence_length+1))]
-
-    seq_df = pd.DataFrame(list(zip(sequence, pos)), columns=['amino_acid', 'position'])
-
-    return seq_df
+    return sequence
 
 
 def extract_solvent_accessibility_from_dssp_file(dssp_file):
-    '''
-    TODO: description
-    '''
+    """
+    Parses a dssp file to find the solvent accessibility of each residue.
+    """
     dssp_parser = parseDSSP(dssp_file)
     dssp_parser.parse()
     dssp_parsed_dict = dssp_parser.dictTodataframe()
@@ -41,8 +34,8 @@ def extract_solvent_accessibility_from_dssp_file(dssp_file):
     solvent_accessibility_of_residue = defaultdict(lambda: [])
     residue_number_to_amino_acid = defaultdict(lambda: '')
     for entry in dssp_parsed_dict.iterrows():
-        # TODO: comment why [1]
-        amino_acid = entry[1].aa
+        amino_acid = entry[1].aa  # position [0] is ID, position [1] is row data
+
         # the ! character is used to mark sequence breaks in dssp files; we ignore it
         if amino_acid == "!":
             continue
@@ -69,6 +62,7 @@ def extract_solvent_accessibility_from_dssp_file(dssp_file):
 
     return pd.DataFrame(dssp_dictionary)
 
+
 def pandas_series_to_string(series):
     """
     Concatenates the entries of a pandas series into a string.
@@ -80,23 +74,29 @@ def pandas_series_to_string(series):
     return string
 
 
-def align_dssp_to_fasta_and_return_epitope_mask(fasta_df, dssp_df):
-    """
-    TODO: description
-    """
-    fasta_sequence = pandas_series_to_string(fasta_df.amino_acid)
-    dssp_sequence = pandas_series_to_string(dssp_df.amino_acid)
+def align_sequences(sequence1, sequence2):
+    alignments = pairwise2.align.globalxx(sequence1, sequence2)
 
-    alignments = pairwise2.align.globalxx(fasta_sequence, dssp_sequence)
-
-    #TODO: check
     best_alignment = alignments[0]
 
-    aligned_fasta_sequence = best_alignment.seqA
-    aligned_dssp_sequence = best_alignment.seqB
+    sequence1_aligned = best_alignment.seqA
+    sequence2_aligned = best_alignment.seqB
 
-    #TODO: rename
-    pointer_in_dssp_sequence = 0
+    return sequence1_aligned, sequence2_aligned
+
+
+def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file, dssp_file, data_directory):
+    """
+    Pairwise sequence aligns a reference fasta sequence to a dssp sequence and returns
+    a solvent accessibility vector for the fasta sequence.
+    """
+    fasta_sequence = get_fasta_sequence_from_file(data_directory+fasta_file)
+    dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(data_directory+dssp_file)
+    dssp_sequence = pandas_series_to_string(dssp_solvent_accessibility.amino_acid)
+
+    aligned_fasta_sequence, aligned_dssp_sequence = align_sequences(fasta_sequence, dssp_sequence)
+
+    position_in_dssp_sequence = 0
     fasta_solvent_accessibility_vector = []
 
     for index, dssp_amino_acid in enumerate(aligned_dssp_sequence):
@@ -104,23 +104,13 @@ def align_dssp_to_fasta_and_return_epitope_mask(fasta_df, dssp_df):
             continue
         else:
             if dssp_amino_acid != "-":
-                solvent_accessibility_of_amino_acid = dssp_df.solvent_accessibility[pointer_in_dssp_sequence]
+                solvent_accessibility_of_amino_acid = dssp_solvent_accessibility.solvent_accessibility[position_in_dssp_sequence]
                 fasta_solvent_accessibility_vector.append(solvent_accessibility_of_amino_acid)
-                pointer_in_dssp_sequence += 1
+                position_in_dssp_sequence += 1
             else:
                 fasta_solvent_accessibility_vector.append(None)
 
     return fasta_solvent_accessibility_vector
-
-
-def extract_solvent_accessibility_vector_from_fasta_and_dssp_file(fasta_file, dssp_file, data_directory):
-    """
-    TODO: description
-    """
-    fasta_df = convert_fasta_file_to_df(data_directory+fasta_file)
-    dssp_df = extract_solvent_accessibility_from_dssp_file(data_directory + dssp_file)
-
-    return align_dssp_to_fasta_and_return_epitope_mask(fasta_df, dssp_df)
 
 
 if __name__ == "__main__":
@@ -129,9 +119,8 @@ if __name__ == "__main__":
     spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
     spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
 
-    SAV = extract_solvent_accessibility_vector_from_fasta_and_dssp_file(fasta_file='rcsb_pdb_7N1U.fasta',
-                                                                        dssp_file='7n1u.dssp',
-                                                                        data_directory=data_dir)
+    SAV = get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file='rcsb_pdb_7N1U.fasta',
+                                                               dssp_file='7n1u.dssp',
+                                                               data_directory=data_dir)
 
     print(SAV)
-
