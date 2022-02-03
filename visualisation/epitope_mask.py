@@ -108,7 +108,7 @@ def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file, dssp_file, 
                 fasta_solvent_accessibility_vector.append(solvent_accessibility_of_amino_acid)
                 position_in_dssp_sequence += 1
             else:
-                fasta_solvent_accessibility_vector.append(None)
+                fasta_solvent_accessibility_vector.append(0)
 
     return fasta_solvent_accessibility_vector
 
