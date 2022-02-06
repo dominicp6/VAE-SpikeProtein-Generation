@@ -2,6 +2,7 @@
 This script provides functions which preprocess fasta datafiles by removing incomplete sequences,
 collecting repeats and aligning misaligned sequences with MUSCLE.
 """
+
 import pandas as pd
 from Bio import SeqIO
 from Bio.Align.Applications import MuscleCommandline
