@@ -95,36 +95,36 @@ def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file,
     Pairwise sequence aligns a reference fasta sequence to a dssp sequence and returns
     a solvent accessibility vector for the fasta sequence.
     """
-    fasta_sequence = get_fasta_sequence_from_file(data_directory+fasta_file)
+    reference_sequence = get_fasta_sequence_from_file(data_directory+fasta_file)
     dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(data_directory+dssp_file)
     dssp_sequence = pandas_series_to_string(dssp_solvent_accessibility.amino_acid)
 
-    aligned_fasta_sequence, aligned_dssp_sequence = align_sequences(fasta_sequence, dssp_sequence)
+    aligned_reference_sequence, aligned_dssp_sequence = align_sequences(reference_sequence, dssp_sequence)
 
     position_in_dssp_sequence = 0
-    fasta_solvent_accessibility_vector = []
+    epitope_mask = []
 
     for index, dssp_amino_acid in enumerate(aligned_dssp_sequence):
-        if aligned_fasta_sequence[index] == "-":
+        if aligned_reference_sequence[index] == "-":
             continue
         else:
             if dssp_amino_acid != "-":
                 solvent_accessibility_of_amino_acid = dssp_solvent_accessibility.solvent_accessibility[position_in_dssp_sequence]
-                fasta_solvent_accessibility_vector.append(solvent_accessibility_of_amino_acid)
+                epitope_mask.append(solvent_accessibility_of_amino_acid)
                 position_in_dssp_sequence += 1
             else:
-                fasta_solvent_accessibility_vector.append(0)
+                epitope_mask.append(0)
 
-    fasta_solvent_accessibility_vector = np.array(fasta_solvent_accessibility_vector)
+    epitope_mask = np.array(epitope_mask)
     if threshold is not None:
         assert 1 > threshold > 0, "threshold must be a float between 0 and 1"
-        max_sa = np.max(fasta_solvent_accessibility_vector)
-        fasta_solvent_accessibility_vector = [0 if entry/max_sa < threshold else 1
-                                              for entry in fasta_solvent_accessibility_vector]
+        max_sa = np.max(epitope_mask)
+        epitope_mask = [0 if entry/max_sa < threshold else 1
+                                              for entry in epitope_mask]
     if normalise:
-        fasta_solvent_accessibility_vector /= np.max(fasta_solvent_accessibility_vector)
+        epitope_mask /= np.max(epitope_mask)
 
-    return fasta_solvent_accessibility_vector
+    return epitope_mask, reference_sequence
 
 
 if __name__ == "__main__":
@@ -133,7 +133,12 @@ if __name__ == "__main__":
     spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
     spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
 
-    SAV = get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file='rcsb_pdb_7N1U.fasta',
+    epitope_mask, reference_sequence = get_solvent_accessibility_vector_from_fasta_and_dssp(
+                                                               fasta_file='rcsb_pdb_7N1U.fasta',
                                                                dssp_file='7n1u.dssp',
                                                                data_directory=data_dir)
-    print(SAV)
+    print(epitope_mask)
+
+    # TODO: function that reads in aligned sequence file, finds the reference sequence in that file and
+    #  adjusts the epitope mask accordingly
+    
