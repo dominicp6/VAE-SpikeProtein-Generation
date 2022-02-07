@@ -85,11 +85,11 @@ def align_sequences(sequence1, sequence2):
     return sequence1_aligned, sequence2_aligned
 
 
-def get_solvent_accessibility_vector_from_fasta_and_dssp(fasta_file,
-                                                         dssp_file,
-                                                         data_directory,
-                                                         normalise=True,
-                                                         threshold=None):
+def get_epitope_mask(fasta_file,
+                     dssp_file,
+                     data_directory,
+                     normalise=True,
+                     threshold=None):
     # TODO: complete description
     """
     Pairwise sequence aligns a reference fasta sequence to a dssp sequence and returns
@@ -133,10 +133,7 @@ if __name__ == "__main__":
     spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
     spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
 
-    epitope_mask, reference_sequence = get_solvent_accessibility_vector_from_fasta_and_dssp(
-                                                               fasta_file='rcsb_pdb_7N1U.fasta',
-                                                               dssp_file='7n1u.dssp',
-                                                               data_directory=data_dir)
+    epitope_mask, reference_sequence = get_epitope_mask(fasta_file='rcsb_pdb_7N1U.fasta', dssp_file='7n1u.dssp', data_directory=data_dir)
     print(epitope_mask)
 
     # TODO: function that reads in aligned sequence file, finds the reference sequence in that file and
