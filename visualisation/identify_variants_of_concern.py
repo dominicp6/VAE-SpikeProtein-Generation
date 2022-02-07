@@ -29,7 +29,7 @@ def sequences_to_id(file, consensus_dict):
                 alignment_score = pairwise2.align.globalxx(ref_seq, sequence, score_only = True)
                 variant_similarity[variant] = alignment_score
 
-            with open(sequences_with_variant_src, 'w') as outfile:
+            with open(sequences_with_variant_src, 'a') as outfile:
                 line1 = frequency.strip() + "," + max(variant_similarity, key=variant_similarity.get) + "\n"
                 line2 = sequence
                 outfile.writelines([line1, line2])
@@ -37,8 +37,8 @@ def sequences_to_id(file, consensus_dict):
 
 if __name__ == "__main__":
     cons_sequences_src = r"../data/spike_protein_sequences/consensus_sequences/"
-    sequences_src = r"C:\cdt_data\CovidProject\1_in_500_cleaned.fasta"
-
+    sequences_src = r"C:\cdt_data\CovidProject\1_in_50_cleaned.fasta"
+    #sequences_with_variant_src = r"C:\cdt_data\CovidProject\1_in_500_cleaned_variant.fasta"
     sequences_with_variant_src = sequences_src.split('.')[0]+"_variant.fasta"
 
 
