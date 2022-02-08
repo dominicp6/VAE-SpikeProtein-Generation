@@ -104,10 +104,10 @@ def adjust_epitope_mask_to_aligned_database(reference_sequence, epitope_mask, al
                 number_of_hyphens_passed = len(indices_of_hyphens[indices_of_hyphens < index])
                 if index in indices_of_hyphens:
                     # impute missing entries with the average values of adjacent entries
-                    refined_epitope_mask[index] = (epitope_mask[index-number_of_hyphens_passed-1]+
-                                                   epitope_mask[index-number_of_hyphens_passed])/2
+                    refined_epitope_mask[index] = (epitope_mask[index - number_of_hyphens_passed - 1] +
+                                                   epitope_mask[index - number_of_hyphens_passed]) / 2
                 else:
-                    refined_epitope_mask[index] = epitope_mask[index-number_of_hyphens_passed]
+                    refined_epitope_mask[index] = epitope_mask[index - number_of_hyphens_passed]
             break
 
     try:
@@ -137,8 +137,8 @@ def get_epitope_mask(fasta_file,
                        values above are set to 1. I.e. this makes the epitope mask a binary mask.
     :return: epitope mask
     """
-    reference_sequence = get_fasta_sequence_from_file(data_directory+fasta_file)
-    dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(data_directory+dssp_file)
+    reference_sequence = get_fasta_sequence_from_file(data_directory + fasta_file)
+    dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(data_directory + dssp_file)
     dssp_sequence = pandas_series_to_string(dssp_solvent_accessibility.amino_acid)
 
     aligned_reference_sequence, aligned_dssp_sequence = align_sequences(reference_sequence, dssp_sequence)
@@ -152,7 +152,8 @@ def get_epitope_mask(fasta_file,
             continue
         else:
             if dssp_amino_acid != "-":
-                solvent_accessibility_of_amino_acid = dssp_solvent_accessibility.solvent_accessibility[position_in_dssp_sequence]
+                solvent_accessibility_of_amino_acid = dssp_solvent_accessibility.solvent_accessibility[
+                    position_in_dssp_sequence]
                 epitope_mask.append(solvent_accessibility_of_amino_acid)
                 position_in_dssp_sequence += 1
             else:
@@ -163,8 +164,8 @@ def get_epitope_mask(fasta_file,
     if threshold is not None:
         assert 1 > threshold > 0, "threshold must be a float between 0 and 1"
         max_sa = np.max(epitope_mask)
-        epitope_mask = [0 if entry/max_sa < threshold else 1
-                                              for entry in epitope_mask]
+        epitope_mask = [0 if entry / max_sa < threshold else 1
+                        for entry in epitope_mask]
     if normalise:
         epitope_mask /= np.max(epitope_mask)
 
@@ -172,7 +173,6 @@ def get_epitope_mask(fasta_file,
     epitope_mask = adjust_epitope_mask_to_aligned_database(reference_sequence, epitope_mask, aligned_file)
 
     return epitope_mask, reference_sequence
-
 
 
 if __name__ == "__main__":
@@ -185,4 +185,3 @@ if __name__ == "__main__":
                                                         dssp_file='reference_spike.dssp',
                                                         aligned_file='../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
                                                         data_directory=data_dir)
-    
