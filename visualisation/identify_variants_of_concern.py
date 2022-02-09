@@ -1,9 +1,15 @@
+"""
+Tools to label SARS-COV2 spike sequences with the closest known variant.
+"""
 from Bio import pairwise2
 import os
 from Bio import SeqIO
 
 
-def consensus_sequences_to_dict(sequences_src):
+def create_variant_sequences_dict(sequences_src):
+    """
+    Creates a dictionary withs keys the variant names and values the reference spike protein sequences.
+    """
     names = []
     for entry in os.listdir(sequences_src):  # Read all sequences
         if os.path.isfile(os.path.join(sequences_src, entry)):
@@ -15,26 +21,34 @@ def consensus_sequences_to_dict(sequences_src):
             for fasta in SeqIO.parse(sequences_src + name, "fasta"):
                 fasta_name, sequence = fasta.id, str(fasta.seq)
             consensus_dict[name[:-6]] = sequence
+
     return consensus_dict
 
 
-def sequences_to_id(file, consensus_dict):
+def label_fasta_file_sequences_with_closest_variant(infile, outfile, path_to_consensus_sequences, data_directory):
+    """
+    Reads an unlabeled fasta file, finds the closest known variant to each sequence and
+    generates an output file with each sequence labelled.
+    """
+
+    variant_sequences_dict = create_variant_sequences_dict(path_to_consensus_sequences)
+
     variant_similarity = {}
-    f = open(file, "r")
-    while True:
-        frequency = f.readline()
-        # print(frequency)
-        sequence = f.readline()
-        if not sequence: break  # EOF
+    unlabeled_fasta_file = open(data_directory + infile, "r")
 
-        for variant, ref_seq in consensus_dict.items():
-            alignment_score = pairwise2.align.globalxx(ref_seq, sequence, score_only=True)
-            variant_similarity[variant] = alignment_score
+    with open(data_directory + outfile, 'w') as labeled_fasta_file:
+        while True:
+            frequency = unlabeled_fasta_file.readline()
+            sequence = unlabeled_fasta_file.readline()
+            if not sequence: break  # EOF
 
-        with open(sequences_with_variant_src, 'a') as outfile:
-            line1 = frequency.strip() + "," + max(variant_similarity, key=variant_similarity.get) + "\n"
+            for variant, ref_seq in variant_sequences_dict.items():
+                alignment_score = pairwise2.align.globalxx(ref_seq, sequence, score_only=True)
+                variant_similarity[variant] = alignment_score
+
+            line1 = frequency.strip() + "|" + max(variant_similarity, key=variant_similarity.get) + "\n"
             line2 = sequence
-            outfile.writelines([line1, line2])
+            labeled_fasta_file.writelines([line1, line2])
 
 
 if __name__ == "__main__":
@@ -43,6 +57,6 @@ if __name__ == "__main__":
     # sequences_with_variant_src = r"C:\cdt_data\CovidProject\1_in_500_cleaned_variant.fasta"
     sequences_with_variant_src = sequences_src.split('.')[0] + "_variant.fasta"
 
-    consensus_sequences_dict = consensus_sequences_to_dict(cons_sequences_src)
+    consensus_sequences_dict = create_variant_sequences_dict(cons_sequences_src)
 
-    sequences_to_id(sequences_src, consensus_sequences_dict)
+    label_fasta_file_sequences_with_closest_variant(sequences_src, consensus_sequences_dict)

@@ -4,7 +4,7 @@ collecting repeats and aligning misaligned sequences with MUSCLE.
 """
 
 import pandas as pd
-from Bio import SeqIO
+from Bio import SeqIO, pairwise2
 from Bio.Align.Applications import MuscleCommandline
 from collections import defaultdict
 import os
@@ -14,6 +14,7 @@ from tqdm import tqdm
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (DO NOT CHANGE)
 
 path_to_muscle_executable = '/home/dominic/miniconda3/pkgs/muscle-3.8.1551-h7d875b9_6/bin/muscle'
+path_to_consensus_sequences = script_dir+'/data/spike_protein_sequences/consensus_sequences/'
 
 # relative path of datasets
 data_dir = script_dir + '/data/spike_protein_sequences/'
@@ -139,6 +140,51 @@ def reduce_to_unique_sequences(infile,
     return sequence_count_dict, sequence_length_dict
 
 
+def create_variant_sequences_dict(sequences_src):
+    """
+    Creates a dictionary withs keys the variant names and values the reference spike protein sequences.
+    """
+    names = []
+    for entry in os.listdir(sequences_src):  # Read all sequences
+        if os.path.isfile(os.path.join(sequences_src, entry)):
+            names.append(entry)
+
+    consensus_dict = {}
+    for name in names:
+        if name[:-6] not in consensus_dict.keys():
+            for fasta in SeqIO.parse(sequences_src + name, "fasta"):
+                fasta_name, sequence = fasta.id, str(fasta.seq)
+            consensus_dict[name[:-6]] = sequence
+
+    return consensus_dict
+
+
+def label_fasta_file_sequences_with_closest_variant(infile, outfile, path_to_consensus_sequences, data_directory):
+    """
+    Reads an unlabeled fasta file, finds the closest known variant to each sequence and
+    generates an output file with each sequence labelled.
+    """
+
+    variant_sequences_dict = create_variant_sequences_dict(path_to_consensus_sequences)
+
+    variant_similarity = {}
+    unlabeled_fasta_file = open(data_directory + infile, "r")
+
+    with open(data_directory + outfile, 'w') as labeled_fasta_file:
+        while True:
+            frequency = unlabeled_fasta_file.readline()
+            sequence = unlabeled_fasta_file.readline()
+            if not sequence: break  # EOF
+
+            for variant, ref_seq in variant_sequences_dict.items():
+                alignment_score = pairwise2.align.globalxx(ref_seq, sequence, score_only=True)
+                variant_similarity[variant] = alignment_score
+
+            line1 = frequency.strip() + "|" + max(variant_similarity, key=variant_similarity.get) + "\n"
+            line2 = sequence
+            labeled_fasta_file.writelines([line1, line2])
+
+
 def reduce_and_align_sequences(infile: str,
                                outfile: str,
                                reduction_factor: int,
@@ -147,7 +193,8 @@ def reduce_and_align_sequences(infile: str,
                                data_directory = data_dir,
                                path_to_muscle_executable = path_to_muscle_executable):
     """
-    Removes incomplete sequences from a fasta database then downsamples, pools identical sequences and aligns them.
+    Removes incomplete sequences from a fasta database, then downsamples, pools identical sequences, labels them with
+    the closest matching covid spike protein variant and finally aligns them using MUSCLE.
 
     :param infile: The original fasta file to reduce and align.
     :param outfile: The name of the final fasta file.
@@ -177,22 +224,24 @@ def reduce_and_align_sequences(infile: str,
                                data_directory=data_dir)
 
     # 4.
+    print('Labelling with closest variant...')
+    label_fasta_file_sequences_with_closest_variant(infile=infile + '.cleaned.downsampled.unique',
+                                                    outfile=infile + '.cleaned.downsampled.unique.labeled',
+                                                    data_directory=data_dir,
+                                                    path_to_consensus_sequences=path_to_consensus_sequences)
+
+
+    # 5.
     print('To complete the alignment step run this command in the terminal:')
     muscle_command = MuscleCommandline(path_to_muscle_executable,
-                      input=data_directory+infile+'.cleaned.downsampled.unique',
+                      input=data_directory+infile+'.cleaned.downsampled.unique.labeled',
                       out=data_directory+outfile)
     print(muscle_command)
 
 
 if __name__ == "__main__":
-    # reduce_and_align_sequences(infile='spikeprot0112.fasta',
-    #                            outfile='aligned_spike_proteins.fasta',
-    #                            reduction_factor=100,
-    #                            length_cutoff=1200,
-    #                            invalid_amino_acids_cutoff=1)
-
-    reduce_and_align_sequences(infile='1_in_500_spikeprot0112.fasta',
-                               outfile='aligned_spike_proteins.fasta',
-                               reduction_factor=1,
+    reduce_and_align_sequences(infile='spikeprot0112.fasta',
+                               outfile='1_in_500.afa',
+                               reduction_factor=500,
                                length_cutoff=1200,
                                invalid_amino_acids_cutoff=1)
