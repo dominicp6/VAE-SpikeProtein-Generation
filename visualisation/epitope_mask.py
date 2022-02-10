@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from Bio import SeqIO
 from DSSPparser import parseDSSP
 import pandas as pd
@@ -137,8 +138,10 @@ def get_epitope_mask(fasta_file,
                        values above are set to 1. I.e. this makes the epitope mask a binary mask.
     :return: epitope mask
     """
-    reference_sequence = get_fasta_sequence_from_file(data_directory + fasta_file)
-    dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(data_directory + dssp_file)
+    fasta = os.path.join(data_directory, fasta_file)
+    dssp = os.path.join(data_directory, dssp_file)
+    reference_sequence = get_fasta_sequence_from_file(fasta)
+    dssp_solvent_accessibility = extract_solvent_accessibility_from_dssp_file(dssp)
     dssp_sequence = pandas_series_to_string(dssp_solvent_accessibility.amino_acid)
 
     aligned_reference_sequence, aligned_dssp_sequence = align_sequences(reference_sequence, dssp_sequence)
@@ -176,12 +179,10 @@ def get_epitope_mask(fasta_file,
 
 
 if __name__ == "__main__":
-    data_dir = "../data/spike_protein_pdb/"
-    spike_structure_src = r"../data/spike_protein_pdb/7n1u.pdb"
-    spike_sequence_src = r"../data/spike_protein_pdb/rcsb_pdb_7N1U.fasta"
-    spike_dssp_src = r"../data/spike_protein_pdb/7n1u.dssp"
+    data_dir = os.path.join("..", "data", "spike_protein_pdb")
+    aligned_file = os.path.join("..", "data", "spike_protein_sequences", "1_in_500_cleaned_aligned.afa")
 
     epitope_mask, reference_sequence = get_epitope_mask(fasta_file='reference_spike.fasta',
                                                         dssp_file='reference_spike.dssp',
-                                                        aligned_file='../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
+                                                        aligned_file=aligned_file,
                                                         data_directory=data_dir)

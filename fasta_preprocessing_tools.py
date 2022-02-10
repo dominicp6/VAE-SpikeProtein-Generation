@@ -1,6 +1,6 @@
 """
 This script provides functions which preprocess fasta datafiles by removing incomplete sequences,
-collecting repeats and aligning misaligned sequences with MUSCLE.
+collecting repeats, labelling with variant names, and aligning misaligned sequences with MUSCLE.
 """
 
 import pandas as pd
@@ -14,17 +14,17 @@ from tqdm import tqdm
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (DO NOT CHANGE)
 
 path_to_muscle_executable = '/home/dominic/miniconda3/pkgs/muscle-3.8.1551-h7d875b9_6/bin/muscle'
-path_to_consensus_sequences = script_dir+'/data/spike_protein_sequences/consensus_sequences/'
+path_to_consensus_sequences = os.path.join(script_dir, "data", "spike_protein_sequences", "consensus_sequences")
 
 # relative path of datasets
-data_dir = script_dir + '/data/spike_protein_sequences/'
+data_dir = os.path.join(script_dir, "data", "spike_protein_sequences")
 
 
 def remove_incomplete_sequences_from_fasta(infile,
                                            outfile,
                                            length_cutoff=1200,
                                            invalid_amino_acids_cutoff=1,
-                                           data_directory = data_dir):
+                                           data_directory=data_dir):
     """
     Given an input fasta file, creates a new fasta file with corrupt sequences removed.
     Corrupt sequences are those which are either too short, or contain too many 'X's, indicating low data quality.
@@ -33,10 +33,11 @@ def remove_incomplete_sequences_from_fasta(infile,
     :param outfile:  The file to be created.
     :param length_cutoff:  Sequences below this length are removed.
     :param invalid_amino_acids_cutoff:  Sequences with this many or more 'X' amino acids are removed.
+    :param data_directory: Path to directory of infile and outfile.
     """
 
-    with open(data_directory + outfile, "w") as outfile:
-        with open(data_directory + infile, "r") as infile:
+    with open(os.path.join(data_directory, outfile), "w") as outfile:
+        with open(os.path.join(data_directory, infile), "r") as infile:
             for sequence in tqdm(infile):
                 # if the line is not a descriptor line
                 if sequence[0] != '>':
@@ -53,7 +54,7 @@ def remove_incomplete_sequences_from_fasta(infile,
 
 def downsample_fasta_file(infile,
                           outfile,
-                          downsample_factor = 100,
+                          downsample_factor=100,
                           data_directory=data_dir):
     """
     Downsamples a fasta file by extracting only every Nth sequence.
@@ -61,11 +62,11 @@ def downsample_fasta_file(infile,
     :param infile: The fasta file to downsample.
     :param outfile: The name for the downsampled fasta file to be saved to disk.
     :param downsample_factor: The factor by which to downsample.
-    :param data_directory: Relative path to the data directory.
-    :return:
+    :param data_directory: Path to directory of infile and outfile.
     """
-    with open(data_directory + infile, "r") as original_fasta_file:
-        with open(data_directory + outfile, "w") as downsampled_fasta_file:
+
+    with open(os.path.join(data_directory, infile), "r") as original_fasta_file:
+        with open(os.path.join(data_directory, outfile), "w") as downsampled_fasta_file:
             for line_index, line in tqdm(enumerate(original_fasta_file)):
                 # factor of 2 because each sequence also has an id row in a fasta file
                 print_every = 2 * downsample_factor
@@ -85,11 +86,12 @@ def reduce_to_unique_sequences(infile,
 
     :param infile: The input fasta file to be processed.
     :param outfile: The name of the outputfile.
-    :param data_directory: Relative path to the data directory.
-    :return: Dictionary counting the number of each type of sequence and the number of
+    :param data_directory: Path to directory of infile and outfile.
+    :return: Dictionaries counting the number of each type of sequence and the number of
              of each length of sequence.
+             e.g. ['ABC' : 1000, 'BCDE' : 500], [3: 1000, 4: 500]
     """
-    fasta_sequences = SeqIO.parse(open(data_directory + infile), 'fasta')
+    fasta_sequences = SeqIO.parse(os.path.join(data_directory, infile), 'fasta')
 
     # Check is valid fasta file
     if not fasta_sequences:
@@ -126,7 +128,7 @@ def reduce_to_unique_sequences(infile,
         median_date = pd.Series(date_list, dtype='datetime64[ns]').quantile(0.5, interpolation="midpoint")
         sequence_date_dict[sequence] = median_date
 
-    with open(data_directory + outfile, "w") as f:
+    with open(os.path.join(data_directory, outfile), "w") as f:
         for seq, count in sequence_count_dict.items():
             seq_date = sequence_date_dict[seq]
             print(f'>{count}|{seq_date}', file=f)
@@ -152,7 +154,7 @@ def create_variant_sequences_dict(sequences_src):
     consensus_dict = {}
     for name in names:
         if name[:-6] not in consensus_dict.keys():
-            for fasta in SeqIO.parse(sequences_src + name, "fasta"):
+            for fasta in SeqIO.parse(os.path.join(sequences_src, name), "fasta"):
                 fasta_name, sequence = fasta.id, str(fasta.seq)
             consensus_dict[name[:-6]] = sequence
 
@@ -168,9 +170,9 @@ def label_fasta_file_sequences_with_closest_variant(infile, outfile, path_to_con
     variant_sequences_dict = create_variant_sequences_dict(path_to_consensus_sequences)
 
     variant_similarity = {}
-    unlabeled_fasta_file = open(data_directory + infile, "r")
+    unlabeled_fasta_file = open(os.path.join(data_directory, infile), "r")
 
-    with open(data_directory + outfile, 'w') as labeled_fasta_file:
+    with open(os.path.join(data_directory, outfile), 'w') as labeled_fasta_file:
         while True:
             frequency = unlabeled_fasta_file.readline()
             sequence = unlabeled_fasta_file.readline()

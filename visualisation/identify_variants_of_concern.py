@@ -18,7 +18,7 @@ def create_variant_sequences_dict(sequences_src):
     consensus_dict = {}
     for name in names:
         if name[:-6] not in consensus_dict.keys():
-            for fasta in SeqIO.parse(sequences_src + name, "fasta"):
+            for fasta in SeqIO.parse(os.path.join(sequences_src, name), "fasta"):
                 fasta_name, sequence = fasta.id, str(fasta.seq)
             consensus_dict[name[:-6]] = sequence
 
@@ -34,9 +34,9 @@ def label_fasta_file_sequences_with_closest_variant(infile, outfile, path_to_con
     variant_sequences_dict = create_variant_sequences_dict(path_to_consensus_sequences)
 
     variant_similarity = {}
-    unlabeled_fasta_file = open(data_directory + infile, "r")
+    unlabeled_fasta_file = open(os.path.join(data_directory, infile), "r")
 
-    with open(data_directory + outfile, 'w') as labeled_fasta_file:
+    with open(os.path.join(data_directory, outfile), 'w') as labeled_fasta_file:
         while True:
             frequency = unlabeled_fasta_file.readline()
             sequence = unlabeled_fasta_file.readline()
@@ -52,11 +52,10 @@ def label_fasta_file_sequences_with_closest_variant(infile, outfile, path_to_con
 
 
 if __name__ == "__main__":
-    cons_sequences_src = r"../data/spike_protein_sequences/consensus_sequences/"
-    sequences_src = r"C:\cdt_data\CovidProject\1_in_50_cleaned.fasta"
-    # sequences_with_variant_src = r"C:\cdt_data\CovidProject\1_in_500_cleaned_variant.fasta"
-    sequences_with_variant_src = sequences_src.split('.')[0] + "_variant.fasta"
+    cons_sequences_src = os.path.join("..", "data", "spike_protein_sequences", "consensus_sequences")
+    data_dir = os.path.join("..", "data", "spike_protein_sequences")
 
-    consensus_sequences_dict = create_variant_sequences_dict(cons_sequences_src)
-
-    label_fasta_file_sequences_with_closest_variant(sequences_src, consensus_sequences_dict)
+    label_fasta_file_sequences_with_closest_variant(infile="spikeprot0112.fasta.cleaned.downsampled.unique",
+                                                    outfile="spikeprot0112.fasta.cleaned.downsampled.unique.labeled2" ,
+                                                    path_to_consensus_sequences=cons_sequences_src,
+                                                    data_directory=data_dir)

@@ -1,4 +1,3 @@
-import sys
 import os
 import umap.umap_ as umap  # make sure that you install "umap-learn" not "umap"
 import matplotlib.pyplot as plt
@@ -7,7 +6,7 @@ from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 
 
-def encode_sequences(infile, encoding_type, mask=None):
+def encode_sequences(infile, encoding_type, data_directory=None, encodings_directory=None, mask=None):
     """
     Encodes aligned sequences from a fasta file.
 
@@ -25,7 +24,11 @@ def encode_sequences(infile, encoding_type, mask=None):
     frequencies       - the number of times that each sequence appeared (used during visualisation)
     encoded_sequences - the encoded amino acid sequences
     """
-    encoder = ProteinSequenceEncoder(encoding_type=encoding_type, mask=mask)
+    encoder = ProteinSequenceEncoder(encoding_type=encoding_type,
+                                     data_directory=data_directory,
+                                     encodings_directory=encodings_directory,
+                                     mask=mask)
+
     frequencies, encoded_sequences = encoder.encode_from_fasta_file(infile, f'1_in_500_encoded_{encoding_type}.txt')
     return frequencies, encoded_sequences
 
@@ -111,6 +114,8 @@ def generate_embedding_map_from_database(aligned_fasta_file,
                                          seed=42,
                                          markerSize=1,
                                          method='PCA',
+                                         data_directory=os.path.join("..", "data", "spike_protein_sequences"),
+                                         encodings_directory=os.path.join("..", "data", "encodings"),
                                          mask=None):
     """
     Plots a 2D representation of the dimensionality-reduced embeddings of the encoded sequences in a fasta database.
@@ -128,7 +133,11 @@ def generate_embedding_map_from_database(aligned_fasta_file,
     assert method == 'PCA' or method == 'UMAP' or method == 'tSNE', "method must be either PCA, UMAP or tSNE"
 
     # encoded the protein sequences
-    frequencies, encoded_sequences = encode_sequences(infile=aligned_fasta_file, encoding_type=encoding_type, mask=mask)
+    frequencies, encoded_sequences = encode_sequences(infile=aligned_fasta_file,
+                                                      encoding_type=encoding_type,
+                                                      mask=mask,
+                                                      data_directory=data_directory,
+                                                      encodings_directory=encodings_directory)
 
     # compute the sequence embeddings
     if method == 'PCA':

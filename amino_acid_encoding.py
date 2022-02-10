@@ -17,22 +17,27 @@ class ProteinSequenceEncoder:
     def __init__(self,
                  encoding_type="One_hot",
                  mask=None,
-                 project_directory=os.path.dirname(os.path.realpath(__file__))):
+                 encodings_directory=os.path.join("..", "data", "encodings"),
+                 data_directory=os.path.join("..", "data", "spike_protein_sequences")):
 
         if encoding_type not in ProteinSequenceEncoder.valid_encoding_types:
             raise Exception(f"Encoding type {encoding_type} not found")
 
         self.encoding_type = encoding_type
-        self.project_directory = project_directory
+        self.encodings_directory = encodings_directory
+        self.data_directory = data_directory
         self.mask = mask
 
     @staticmethod
-    def read_encoding_file(file_name):
+    def read_encoding_file(path_to_sequence_encodings_file):
+        """
+        Helper function to parse a file of encoded sequences. Returns the sequence descriptors and the encodings
+        found in the file.
+        """
         descriptors = []
         encoded_sequences = None
-        with open(os.path.dirname(os.path.realpath(__file__)) + '/data/spike_protein_sequences/' + file_name,
-                  "r") as in_file:
-            for line in in_file:
+        with open(path_to_sequence_encodings_file, "r") as seq_encodings_file:
+            for line in seq_encodings_file:
                 if line[0] == ">":
                     descriptors.append(int(''.join(filter(str.isdigit, line))))
                 else:
@@ -74,7 +79,7 @@ class ProteinSequenceEncoder:
         returns [{'A': [1, 0, 0, 0, 1]}, {'C': [1, 0, 0, 1, 0]}, {'D': [1, 0, 1, 0, 0]}]
         """
         seq = seq.upper()
-        with open(self.project_directory + "/data/encodings/%s.json" % self.encoding_type, 'r') as load_f:
+        with open(os.path.join(self.encodings_directory, f"{self.encoding_type}.json"), 'r') as load_f:
             encoding = json.load(load_f)
         encoding_data = []
         if self.encoding_type == "ProtVec":
@@ -116,20 +121,23 @@ class ProteinSequenceEncoder:
 
     @staticmethod
     def _convert_numeric_encoding_to_string_encoding(encoding):
+        """
+        e.g. [1, 2, 3] becomes ['1', '2', '3']
+        """
         return ",".join([str(digit) for digit in encoding])
 
-    def encode_from_fasta_file(self, fasta_file, outfilename, data_dir='/data/spike_protein_sequences/'):
+    def encode_from_fasta_file(self, fasta_file, outfilename):
         """
-        Reads in a fasta file of protein sequences and encodes each sequence.
+        Reads a fasta file of protein sequences and encodes each sequence.
         """
-        fasta_sequences = SeqIO.parse(open(self.project_directory + data_dir + fasta_file), 'fasta')
+        fasta_sequences = SeqIO.parse(open(os.path.join(self.data_directory, fasta_file)), 'fasta')
         number_of_sequences = len(list(fasta_sequences))
         encoded_sequences = None
         descriptors = []
 
-        fasta_sequences = SeqIO.parse(open(self.project_directory + data_dir + fasta_file), 'fasta')
+        fasta_sequences = SeqIO.parse(open(os.path.join(self.data_directory, fasta_file)), 'fasta')
 
-        with open(self.project_directory + data_dir + outfilename, "w") as out_file:
+        with open(os.path.join(self.data_directory, outfilename), "w") as out_file:
             for index, fasta in enumerate(fasta_sequences):
                 identifier, sequence = fasta.id, str(fasta.seq)
                 encoded_seq = self.encode_single_sequence(sequence)
