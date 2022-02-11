@@ -145,7 +145,7 @@ class ProteinSequenceEncoder:
                     encoded_sequences = np.zeros([number_of_sequences, len(encoded_seq)])
                 encoded_sequences[index, :] = encoded_seq
                 encoded_seq = self._convert_numeric_encoding_to_string_encoding(encoded_seq)
-                descriptors.append(int(''.join(filter(str.isdigit, identifier))))
+                descriptors.append(identifier)
                 print(f'>{identifier}', file=out_file)
                 print(encoded_seq, file=out_file)
 
