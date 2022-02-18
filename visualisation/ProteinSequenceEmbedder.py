@@ -1,4 +1,6 @@
 import os
+import numpy as np
+from math import log10, floor
 import umap.umap_ as umap  # make sure that you install "umap-learn" not "umap"
 import matplotlib.pyplot as plt
 from amino_acid_encoding import ProteinSequenceEncoder
@@ -31,7 +33,7 @@ class ProteinSequenceEmbedder:
 
         self.embedding_data = {'embeddings': [],
                                'frequencies': [],
-                               'labels': [],
+                               'other_descriptors': [],
                                'meta_data': []}
 
     def _encode_sequences(self, infile, mask=None):
@@ -56,8 +58,7 @@ class ProteinSequenceEmbedder:
                                          encodings_directory=self.encodings_directory,
                                          mask=mask)
 
-        descriptors, encoded_sequences = encoder.encode_from_fasta_file(infile,
-                                                                        f'1_in_500_encoded_{self.encoding_type}.txt')
+        descriptors, encoded_sequences = encoder.encode_from_fasta_file(infile, f'{infile}_{self.encoding_type}.txt')
 
         return descriptors, encoded_sequences
 
@@ -99,29 +100,64 @@ class ProteinSequenceEmbedder:
         sequence_embeddings = reducer.fit_transform(encoded_sequences)
         return sequence_embeddings
 
-    def plot_embedding_map(self, markerSize=5):
+    def _get_sizes_legend_handles_and_labels(self, marker_size):
+        def round_sig(x, sig=2):
+            return float('{:.{p}g}'.format(x, p=sig))
+
+        max_size = round_sig(max(self.embedding_data['frequencies']), sig=2)
+        numbers = [round_sig(num, sig=2) for num in np.logspace(0, np.log10(max_size), num=5, base=10)]
+        handles = tuple([plt.scatter([], [], s=num*marker_size, marker='o', color='#555555') for num in numbers])
+        labels = tuple([str(int(num)) for num in numbers])
+
+        return handles, labels
+
+    def plot_embedding_map(self, marker_size=5.0, descriptor_number=3, color_map='Set2'):
         """
         Plots a 2D map from a list of embeddings and their associated sequence frequency.
 
-        :param markerSize: relative point markerSize
+        :param color_map: colour map to use for the plot
+        :param marker_size: relative point markerSize
+        :param descriptor_number: identifies which descriptor will be used when colouring sequences
+                                  2 - date of sequence
+                                  3 - variant label of sequence
         """
 
-        marker_sizes = [frequency * markerSize for frequency in self.embedding_data['frequencies']]
+        marker_sizes = [frequency * marker_size for frequency in self.embedding_data['frequencies']]
+
+        # TODO: fix this for dates
+        label_to_class_number = dict()
+        class_numbers = []
+        for label in [descriptor[descriptor_number-2] for descriptor in self.embedding_data['other_descriptors']]:
+            if label not in label_to_class_number.keys():
+                label_to_class_number[label] = len(label_to_class_number)
+            class_numbers.append(label_to_class_number[label])
+
+        fig, ax = plt.subplots()
 
         # plot
-        plt.scatter(self.embedding_data['embeddings'][:, 0],
-                    self.embedding_data['embeddings'][:, 1],
-                    s=marker_sizes, alpha=0.25)
+        scatter = ax.scatter(self.embedding_data['embeddings'][:, 0],
+                             self.embedding_data['embeddings'][:, 1],
+                             c=class_numbers,                 # variant class information
+                             s=marker_sizes,
+                             alpha=0.25,
+                             cmap=plt.get_cmap(color_map))
+
+        # legends
+        labels_legend = ax.legend(handles=scatter.legend_elements()[0], labels=label_to_class_number.keys(), loc="lower left", title="Variant")     # variant legend
+        ax.add_artist(labels_legend)
+        handles, size_labels = self._get_sizes_legend_handles_and_labels(marker_size)
+        plt.legend(handles, size_labels, loc="lower right", title="Frequency", labelspacing=4.2, borderpad=3.5, handletextpad=2.5)          # frequency legend
 
         # title, labels and aspect ratio
-        plt.gca().set_aspect('equal', 'datalim')
-        plt.gcf().set_size_inches(12, 12)
-        plt.title('2D embeddings of SARS-COV19 spike proteins', fontsize=20)
-        plt.xlabel(f'{self.embedding_type} 1')
-        plt.ylabel(f'{self.embedding_type} 2')
+        ax.set_aspect('equal', 'datalim')
+        fig.set_size_inches(15, 15)
+        plt.margins(0.25)
+        ax.set_title('2D embeddings of SARS-COV19 spike proteins', fontsize=20)
+        ax.set_xlabel(f'{self.embedding_type} 1')
+        ax.set_ylabel(f'{self.embedding_type} 2')
 
         # annotate with meta data
-        plt.gca().text(0.95, 0.95, '\n'.join(self.embedding_data['meta_data']),
+        ax.text(0.95, 0.95, '\n'.join(self.embedding_data['meta_data']),
                        horizontalalignment='right', verticalalignment='top',
                        transform=plt.gca().transAxes)
 
@@ -130,25 +166,23 @@ class ProteinSequenceEmbedder:
     @staticmethod
     def _parse_sequence_descriptors(descriptors):
         frequencies = []
-        dates = []
-        labels = []
+        other_descriptors = []
         for descriptor in descriptors:
             split_descriptor = descriptor.split('|')
             try:
-                labels.append(split_descriptor[2])
-                dates.append(split_descriptor[1])
-                frequencies.append(int(split_descriptor[0]))
+                frequencies.append(float(split_descriptor[0]))
             except:
-                try:
-                    labels.append(None)
-                    dates.append(split_descriptor[1])
-                    frequencies.append(int(split_descriptor[0]))
-                except:
-                    labels.append(None)
-                    dates.append(None)
-                    frequencies.append(int(split_descriptor[0]))
+                raise Exception('No frequency value found for sequence in fasta file.')
 
-        return frequencies, dates, labels
+            try:
+                other_descriptors.append(split_descriptor[1:])
+                assert len(split_descriptor[1:]) == len(other_descriptors[0]), \
+                    f"Not all sequences have the same descriptor name " \
+                    f"(found {len(split_descriptor[1:])} and {len(other_descriptors)})"
+            except:
+                raise Exception('No descriptor other than frequency found for fasta sequence.')
+
+        return frequencies, other_descriptors
 
     def embed_sequences(self, infile, hyperparameters, mask):
 
@@ -159,7 +193,7 @@ class ProteinSequenceEmbedder:
         descriptors, encoded_sequences = self._encode_sequences(infile, mask)
 
         # get frequency, median date and variant label from its descriptor
-        frequencies, dates, labels = self._parse_sequence_descriptors(descriptors)
+        frequencies, other_descriptors = self._parse_sequence_descriptors(descriptors)
 
         if mask is not None:
             mask_present = True
@@ -181,7 +215,8 @@ class ProteinSequenceEmbedder:
 
         self.embedding_data['embeddings'] = sequence_embeddings
         self.embedding_data['frequencies'] = frequencies
-        self.embedding_data['dates'] = dates
+        self.embedding_data['other_descriptors'] = other_descriptors
+
         self.embedding_data['meta_data'] = meta_data
 
         return self.embedding_data
@@ -204,16 +239,21 @@ class ProteinSequenceEmbedder:
     def generate_embedding_map(self,
                                infile,
                                hyperparameters=None,
-                               markerSize=1,
+                               marker_size=1,
+                               descriptor_number=3,
+                               color_map='Set2',
                                mask=None):
         """
         Plots a 2D representation of the dimensionality-reduced embeddings of the encoded sequences in a fasta database.
 
         :param hyperparameters: Dictionary of hyperparameters for the embedding algorithm.
         :param infile: a database of aligned fasta sequences.
-        :param markerSize:  relative point markerSize.
+        :param marker_size:  relative point markerSize.
+        :param descriptor_number: identifies which descriptor will be used when colouring sequences
+                                  2 - date of sequence
+                                  3 - variant label of sequence
         :param mask:        An epitope mask to be applied to the encoded sequences (optional).
         """
 
         self.embed_sequences(infile=infile, hyperparameters=hyperparameters, mask=mask)
-        self.plot_embedding_map(markerSize=markerSize)
+        self.plot_embedding_map(marker_size=marker_size, descriptor_number=descriptor_number, color_map=color_map)

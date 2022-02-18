@@ -22,17 +22,14 @@ script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (D
 # relative path of datasets
 data_dir = script_dir + '/data/spike_protein_sequences/'
 
-amino_acid_count_dict = {"A": 0, "R": 0, "N": 0, "D": 0, "C": 0, "Q": 0, "E": 0, "G": 0, "H": 0, "I": 0, "L": 0,
-                         "K": 0, "M": 0, "F": 0, "P": 0, "S": 0, "T": 0, "W": 0, "Y": 0, "V": 0, "-": 0}
-
-
-fasta_file = "temp_file_name.fasta"
+fasta_file = "../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa"
 fasta_sequences = SeqIO.parse(open(fasta_file), 'fasta')
 
-residue_distribution = defaultdict(lambda: amino_acid_count_dict)
+residue_distribution = defaultdict(lambda: {"A": 0, "R": 0, "N": 0, "D": 0, "C": 0, "Q": 0, "E": 0, "G": 0, "H": 0, "I": 0, "L": 0,
+                         "K": 0, "M": 0, "F": 0, "P": 0, "S": 0, "T": 0, "W": 0, "Y": 0, "V": 0, "-": 0})
 for fasta in fasta_sequences:
     id_label, sequence = fasta.id, str(fasta.seq)
-    sequence_count = id_label.split('|')[0]
+    sequence_count = int(id_label.split('|')[0])
     for position, letter in enumerate(sequence):
         residue_distribution[position][letter] += sequence_count
 
@@ -51,11 +48,23 @@ def calculate_conservation_score(entropy, maximum_entropy):
 
 conservation_vector = np.zeros(len(residue_distribution))
 for position, count_dictionary in residue_distribution.items():
-    entropy_of_position = calculate_entropy_of_count_distribution(np.array(count_dictionary.values()))
+    entropy_of_position = calculate_entropy_of_count_distribution(np.fromiter(count_dictionary.values(), dtype=np.int64))
     position_conservation_score = calculate_conservation_score(entropy_of_position, maximum_entropy=-np.log(21))
     conservation_vector[position] = position_conservation_score
 
-plt.plot(conservation_vector)
+
+print(len(conservation_vector))
+print(np.count_nonzero(conservation_vector == 1))
+plt.plot(1-(1-conservation_vector)/np.max(1-conservation_vector), 'k', linewidth=0.75)
+plt.xlabel('Residue Number', fontsize=20)
+plt.ylabel('Conservation Score', fontsize=20)
+plt.xticks(fontsize=18)
+plt.yticks(fontsize=18)
+plt.margins(x=0, y=0)
+plt.ylim((0.00, 1.00))
+fig = plt.gcf()
+fig.set_size_inches(16.5, 10.5)
+fig.set_dpi(100)
 plt.show()
 
 

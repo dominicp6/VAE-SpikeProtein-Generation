@@ -20,6 +20,21 @@ path_to_consensus_sequences = os.path.join(script_dir, "data", "spike_protein_se
 data_dir = os.path.join(script_dir, "data", "spike_protein_sequences")
 
 
+def combine_two_databases(database1, database2, variant_database2, outfile, variant_database1=None):
+    db1_seq = SeqIO.parse(database1, 'fasta')
+    db2_seq = SeqIO.parse(database2, 'fasta')
+
+    with open(outfile, "w") as out_file:
+        for seq in db1_seq:
+            if variant_database1 is not None:
+                print(f">{seq.id}|{variant_database1}", file=out_file)
+            else:
+                print(f">{seq.id}", file=out_file)
+            print(seq.seq, file=out_file)
+        for seq in db2_seq:
+            print(f">{seq.id}|{variant_database2}", file=out_file)
+            print(seq.seq, file=out_file)
+
 def remove_incomplete_sequences_from_fasta(infile,
                                            outfile,
                                            length_cutoff=1200,
@@ -131,7 +146,10 @@ def reduce_to_unique_sequences(infile,
     with open(os.path.join(data_directory, outfile), "w") as f:
         for seq, count in sequence_count_dict.items():
             seq_date = sequence_date_dict[seq]
-            print(f'>{count}|{seq_date}', file=f)
+            if len(seq_date) > 0:
+                print(f'>{count}|{seq_date}', file=f)
+            else:
+                print(f'>{count}', file=f)
             print(seq, file=f)
 
     print(f'Processed {infile}:')
@@ -242,8 +260,17 @@ def reduce_and_align_sequences(infile: str,
 
 
 if __name__ == "__main__":
-    reduce_and_align_sequences(infile='spikeprot0112.fasta',
-                               outfile='1_in_500.afa',
-                               reduction_factor=500,
-                               length_cutoff=1200,
-                               invalid_amino_acids_cutoff=1)
+    # reduce_and_align_sequences(infile='spikeprot0112.fasta',
+    #                            outfile='1_in_500.afa',
+    #                            reduction_factor=500,
+    #                            length_cutoff=1200,
+    #                            invalid_amino_acids_cutoff=1)
+
+    # combine_two_databases('./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
+    #                       'natural', './data/spike_protein_sequences/generated3.fasta', 'synthetic', 'combined.fasta')
+
+    print(data_dir)
+    muscle_command = MuscleCommandline(path_to_muscle_executable,
+                      input='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled',
+                      out='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/aligned.afa')
+    print(muscle_command)

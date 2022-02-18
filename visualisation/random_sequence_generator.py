@@ -5,11 +5,12 @@ NB: 1_in_500_cleaned_unique.afa has 8880 sequences, of which 2274 are unique
 """
 
 import numpy as np
+import random
 from Bio import SeqIO
 from nltk.lm.preprocessing import padded_everygram_pipeline
 from nltk.lm import MLE
 from tqdm import tqdm
-
+from collections import defaultdict
 
 sequence_length = 1000
 
@@ -18,6 +19,7 @@ valid_residue_types = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N
 
 
 def generate_random_ngram_sequences(fasta_file, N, L, outfile, n=3):
+    text_seed = 'MFVFLVLLPLVSSQCVN'
     lm = MLE(n)
     fasta = SeqIO.parse(fasta_file, 'fasta')
 
@@ -34,14 +36,14 @@ def generate_random_ngram_sequences(fasta_file, N, L, outfile, n=3):
     with open(outfile, "w") as f:
         for _ in tqdm(range(N)):
             while True:
-                seq = lm.generate(L-(n-1), text_seed='MFVFLVLLPLVSSQCVN'[0:n-1])
-                seq.insert(0, 'F')
-                seq.insert(0, 'M')
+                seq = lm.generate(L - (n - 1), text_seed='MFVFLVLLPLVSSQCVN'[0:n - 1])
+                for aa in text_seed[0:n - 1][::-1]:
+                    seq.insert(0, aa)
                 seq = "".join(seq)
-                if "</s>" not in seq:      # only generate sequences that dont have a stop symbol in them
+                if "</s>" not in seq:  # only generate sequences that dont have a stop symbol in them
                     print(">", file=f)
                     print(seq, file=f)
-                    break                  # break the while loop
+                    break  # break the while loop
 
     return lm
 
@@ -54,11 +56,69 @@ def generate_completely_random_sequences(N, L, outfile):
             print(seq, file=f)
 
 
-if __name__ == "__main__":
-    #generate_sequences(100, 1282, outfile="completely_random_sequences")
-    lm = generate_random_ngram_sequences("1_in_500_cleaned_aligned.afa", 8880, 1282, n=18, outfile='random_18gram_sequences')
-    from fasta_preprocessing_tools import reduce_to_unique_sequences
-    reduce_to_unique_sequences(infile="random_18gram_sequences",
-                               outfile="random_18gram_sequences.unique",
-                               data_directory='.')
+def generate_randomly_mutated_sequences(database_infile, N, max_number_of_mutations, outfile):
+    canonical_amino_acid_order = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L",
+                                  "K", "M", "F", "P", "S", "T", "W", "Y", "V", "-"]
+    residue_distributions = defaultdict(
+        lambda: {"A": 0, "R": 0, "N": 0, "D": 0, "C": 0, "Q": 0, "E": 0, "G": 0, "H": 0, "I": 0, "L": 0,
+                 "K": 0, "M": 0, "F": 0, "P": 0, "S": 0, "T": 0, "W": 0, "Y": 0, "V": 0, "-": 0})
 
+    # read in and preprocess database file
+    fasta_sequences = SeqIO.parse(database_infile, "fasta")
+    list_of_sequences = [seq.seq for seq in fasta_sequences]
+    fasta_sequences = SeqIO.parse(database_infile, "fasta")
+    list_of_counts = [int(seq.id.split('|')[0]) for seq in fasta_sequences]
+    total_counts = sum(list_of_counts)
+    L=len(list_of_sequences[0])  # get the length of a sequence
+    for residue_index in range(L):
+        for seq_idx, seq in enumerate(list_of_sequences):
+            amino_acid = seq[residue_index]
+            residue_distributions[residue_index][amino_acid] += list_of_counts[seq_idx]
+
+    normalised_residue_distribution = dict()
+    for residue_index, residue_distribution in residue_distributions.items():
+        normalised_residue_distribution[residue_index] = [count / total_counts for count in
+                                                          residue_distribution.values()]
+
+    generated_sequences = []
+    for seq_number in tqdm(range(N)):
+        num_mut = np.random.randint(0, max_number_of_mutations)
+        sequence = random.choice(list_of_sequences)
+        if num_mut == 0:
+            generated_sequences.append(sequence)
+        else:
+            indices_of_mutation_sites = random.sample(range(L), num_mut)
+            for index in indices_of_mutation_sites:
+                new_amino_acid = np.random.choice(canonical_amino_acid_order,
+                                                  p=normalised_residue_distribution[index])
+                sequence = "".join([residue if residue_index != index
+                                    else new_amino_acid for residue_index, residue in enumerate(sequence)])
+            generated_sequences.append(sequence)
+
+    with open(outfile, "w") as f:
+        for seq in generated_sequences:
+            print(">", file=f)
+            print(seq, file=f)
+
+
+if __name__ == "__main__":
+    from fasta_preprocessing_tools import reduce_to_unique_sequences
+
+    n_gram_list = [11, 13, 15, 17]
+    for n in n_gram_list:
+        lm = generate_random_ngram_sequences("1_in_500_cleaned_aligned.afa",
+                                             8880,
+                                             # number of sequences to be generated (same as in experimental database)
+                                             1282,
+                                             # length of sequences to be generated (same as in experimental database)
+                                             n=n,  # n gram number
+                                             outfile=f'random_{n}gram_sequences')
+        reduce_to_unique_sequences(infile=f"random_{n}gram_sequences",
+                                   outfile=f"random_{n}gram_sequences.unique",
+                                   data_directory='.')
+
+
+    #generate_randomly_mutated_sequences("1_in_500_cleaned_aligned.afa", 8880, 75, "generated_up_to_70_mutations")
+    # reduce_to_unique_sequences(infile=f"generated_up_to_70_mutations",
+    #                                outfile=f"generated_up_to_70_mutations.unique",
+    #                                data_directory='.')

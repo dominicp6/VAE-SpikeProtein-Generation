@@ -28,6 +28,8 @@ class ProteinSequenceEncoder:
         self.data_directory = data_directory
         self.mask = mask
 
+        self.encoding_dimension = None    # calculated automatically during encoding
+
     @staticmethod
     def read_encoding_file(path_to_sequence_encodings_file):
         """
@@ -81,6 +83,7 @@ class ProteinSequenceEncoder:
         seq = seq.upper()
         with open(os.path.join(self.encodings_directory, f"{self.encoding_type}.json"), 'r') as load_f:
             encoding = json.load(load_f)
+            self.encoding_dimension = encoding['dimension']
         encoding_data = []
         if self.encoding_type == "ProtVec":
             encoding_data = self.get_ProtVec_encoding(encoding, seq, overlap)
@@ -89,7 +92,7 @@ class ProteinSequenceEncoder:
                 # decides how to deal with void residues that arise from sequence alignment
                 if res == "-":
                     if zero_void_residues:
-                        encoding_data.append({res: [0] * encoding['dimension']})
+                        encoding_data.append({res: [0] * self.encoding_dimension})
                         continue
                     else:
                         encoding_data.append({'X': encoding['X']})
@@ -139,11 +142,17 @@ class ProteinSequenceEncoder:
 
         with open(os.path.join(self.data_directory, outfilename), "w") as out_file:
             for index, fasta in enumerate(fasta_sequences):
-                identifier, sequence = fasta.id, str(fasta.seq)
+                identifier, sequence = fasta.description, str(fasta.seq)
                 encoded_seq = self.encode_single_sequence(sequence)
                 if index == 0:
                     encoded_sequences = np.zeros([number_of_sequences, len(encoded_seq)])
-                encoded_sequences[index, :] = encoded_seq
+                try:
+                    encoded_sequences[index, :] = encoded_seq
+                except:
+                    raise Exception(f'Not all sequences in {fasta_file} are the same length. In particular '
+                                    f'the first sequence was length {encoded_sequences.shape[1]/self.encoding_dimension} '
+                                    f'and sequence number {index+1} was length '
+                                    f'{len(encoded_seq)/self.encoding_dimension}.')
                 encoded_seq = self._convert_numeric_encoding_to_string_encoding(encoded_seq)
                 descriptors.append(identifier)
                 print(f'>{identifier}', file=out_file)
