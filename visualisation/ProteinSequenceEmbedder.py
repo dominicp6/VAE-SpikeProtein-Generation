@@ -111,7 +111,7 @@ class ProteinSequenceEmbedder:
 
         return handles, labels
 
-    def plot_embedding_map(self, marker_size=5.0, descriptor_number=3, color_map='Set2'):
+    def plot_embedding_map(self, marker_size=5.0, descriptor_number=3, color_map='Set2', save_image=False):
         """
         Plots a 2D map from a list of embeddings and their associated sequence frequency.
 
@@ -163,24 +163,26 @@ class ProteinSequenceEmbedder:
 
         plt.show()
 
+        if save_image:
+            plt.savefig(f'{self.embedding_type}_{self.embedding_data["meta_data"]}', format='pdf')
+
     @staticmethod
     def _parse_sequence_descriptors(descriptors):
         frequencies = []
         other_descriptors = []
-        for descriptor in descriptors:
+        for seq_number, descriptor in enumerate(descriptors):
             split_descriptor = descriptor.split('|')
             try:
                 frequencies.append(float(split_descriptor[0]))
             except:
                 raise Exception('No frequency value found for sequence in fasta file.')
 
-            try:
+            if len(split_descriptor) > 1:
                 other_descriptors.append(split_descriptor[1:])
                 assert len(split_descriptor[1:]) == len(other_descriptors[0]), \
-                    f"Not all sequences have the same descriptor name " \
-                    f"(found {len(split_descriptor[1:])} and {len(other_descriptors)})"
-            except:
-                raise Exception('No descriptor other than frequency found for fasta sequence.')
+                    f"Not all sequences have the same number of descriptors " \
+                    f"(sequence 1 has {len(other_descriptors[0])+1} descriptors, whilst sequence" \
+                    f" {seq_number+1} has {len(split_descriptor)} descriptors)"
 
         return frequencies, other_descriptors
 
@@ -242,7 +244,8 @@ class ProteinSequenceEmbedder:
                                marker_size=1,
                                descriptor_number=3,
                                color_map='Set2',
-                               mask=None):
+                               mask=None,
+                               save_image=False):
         """
         Plots a 2D representation of the dimensionality-reduced embeddings of the encoded sequences in a fasta database.
 
@@ -256,4 +259,7 @@ class ProteinSequenceEmbedder:
         """
 
         self.embed_sequences(infile=infile, hyperparameters=hyperparameters, mask=mask)
-        self.plot_embedding_map(marker_size=marker_size, descriptor_number=descriptor_number, color_map=color_map)
+        self.plot_embedding_map(marker_size=marker_size,
+                                descriptor_number=descriptor_number,
+                                color_map=color_map,
+                                save_image=save_image)

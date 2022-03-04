@@ -20,7 +20,82 @@ path_to_consensus_sequences = os.path.join(script_dir, "data", "spike_protein_se
 data_dir = os.path.join(script_dir, "data", "spike_protein_sequences")
 
 
+def check_all_sequences_have_same_length(database):
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    max_length = 0
+    error_found = False
+    for seq_id, seq in tqdm(enumerate(db_seq)):
+        if max_length == 0:
+            max_length = len(seq.seq)
+        else:
+            if len(seq.seq) != max_length:
+                print(f"Error: The sequence number {seq_id+1} has length {len(seq.seq)} whereas the first sequence has length {max_length}.")
+                error_found = True
+
+    if not error_found:
+        print('All sequences have the same length!')
+
+
+def remove_id_label_from_fasta_database(database, id_position, outfile):
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    with open(outfile, 'w') as out_file:
+        for seq in tqdm(db_seq):
+            seq_id_list = seq.id.split('|')
+            del seq_id_list[id_position]
+            print(f">{'|'.join(seq_id_list)}", file=out_file)
+            print(seq.seq, file=out_file)
+
+
+def add_id_label_to_fasta_database(database, id_position, label, outfile):
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    with open(outfile, 'w') as out_file:
+        for seq in tqdm(db_seq):
+            seq_id_list = seq.id.split('|')
+            seq_id_list.insert(id_position, label)
+            print(f">{'|'.join(seq_id_list)}", file=out_file)
+            print(seq.seq, file=out_file)
+
+
+def partition_fasta_database_into_chunks(database, chunk_size, outfile_prefix):
+    """
+    Splits a single database into multiple smaller databases each containing chunk_size number of sequences
+    (except possibly the last chuck, which may be smaller).
+    """
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    file_index = 0
+    saw_a_new_sequence = True
+    with tqdm(total=0) as pbar:
+        while saw_a_new_sequence:
+            for _ in (True,):  # "breakable scope" idiom
+                with open(f"{outfile_prefix}_{file_index}.fasta", "w") as out_file:
+                    saw_a_new_sequence = False
+                    for seq_number, seq in enumerate(db_seq):
+                        saw_a_new_sequence = True
+                        if seq_number < chunk_size:
+                            print(f">{seq.id}", file=out_file)
+                            print(seq.seq, file=out_file)
+                        else:
+                            break
+                    file_index += 1
+                    pbar.update(1)
+                    break
+
+
 def combine_two_databases(database1, database2, variant_database2, outfile, variant_database1=None):
+    """
+    Merges two fasta databases, with optional labelling to distinguish sequences originating from the two databases.
+
+    :param database1: Path to first database.
+    :param database2: Path to second database.
+    :param variant_database2: The "variant" label for the sequences in database 2 (e.g. 'natural', 'VAEsynthetic', ...)
+    :param outfile: The name for the outfile of the merged databases.
+    :param variant_database1: The "variant" label for the sequences in database 1. If "None", then leave the label
+    unchanged.
+    """
     db1_seq = SeqIO.parse(database1, 'fasta')
     db2_seq = SeqIO.parse(database2, 'fasta')
 
@@ -34,6 +109,7 @@ def combine_two_databases(database1, database2, variant_database2, outfile, vari
         for seq in db2_seq:
             print(f">{seq.id}|{variant_database2}", file=out_file)
             print(seq.seq, file=out_file)
+
 
 def remove_incomplete_sequences_from_fasta(infile,
                                            outfile,
@@ -112,9 +188,9 @@ def reduce_to_unique_sequences(infile,
     if not fasta_sequences:
         raise ValueError(f'{infile} is not a valid .fasta file')
 
-    sequence_count_dict = defaultdict(lambda: 0)    # dict(sequence (str): counts of sequence (int))
-    sequence_length_dict = defaultdict(lambda: 0)   # dict(length_of_sqn (int): counts with this length (int))
-    sequence_date_dict = defaultdict(lambda: [])    # dict(sequence (str): dates that sequence was recorded)
+    sequence_count_dict = defaultdict(lambda: 0)  # dict(sequence (str): counts of sequence (int))
+    sequence_length_dict = defaultdict(lambda: 0)  # dict(length_of_sqn (int): counts with this length (int))
+    sequence_date_dict = defaultdict(lambda: [])  # dict(sequence (str): median date that sequence was recorded)
     number_of_sequences = 0
 
     for seq_obj in tqdm(fasta_sequences):
@@ -139,14 +215,15 @@ def reduce_to_unique_sequences(infile,
     sequence_count_dict = dict(sorted(sequence_count_dict.items(), key=lambda item: item[1], reverse=True))
 
     # compute median date of each sequence
-    for sequence, date_list in sequence_date_dict.items():
+    print('Computing median date for each sequence...')
+    for sequence, date_list in tqdm(sequence_date_dict.items()):
         median_date = pd.Series(date_list, dtype='datetime64[ns]').quantile(0.5, interpolation="midpoint")
         sequence_date_dict[sequence] = median_date
 
     with open(os.path.join(data_directory, outfile), "w") as f:
         for seq, count in sequence_count_dict.items():
             seq_date = sequence_date_dict[seq]
-            if len(seq_date) > 0:
+            if seq_date is not None:
                 print(f'>{count}|{seq_date}', file=f)
             else:
                 print(f'>{count}', file=f)
@@ -155,7 +232,6 @@ def reduce_to_unique_sequences(infile,
     print(f'Processed {infile}:')
     print(f'Found {number_of_sequences} sequences,')
     print(f'of which {len(sequence_count_dict)} are unique sequences.')
-
 
     return sequence_count_dict, sequence_length_dict
 
@@ -210,8 +286,8 @@ def reduce_and_align_sequences(infile: str,
                                reduction_factor: int,
                                length_cutoff=1200,
                                invalid_amino_acids_cutoff=1,
-                               data_directory = data_dir,
-                               path_to_muscle_executable = path_to_muscle_executable):
+                               data_directory=data_dir,
+                               path_to_muscle_executable=path_to_muscle_executable):
     """
     Removes incomplete sequences from a fasta database, then downsamples, pools identical sequences, labels them with
     the closest matching covid spike protein variant and finally aligns them using MUSCLE.
@@ -250,27 +326,40 @@ def reduce_and_align_sequences(infile: str,
                                                     data_directory=data_dir,
                                                     path_to_consensus_sequences=path_to_consensus_sequences)
 
-
     # 5.
     print('To complete the alignment step run this command in the terminal:')
     muscle_command = MuscleCommandline(path_to_muscle_executable,
-                      input=data_directory+infile+'.cleaned.downsampled.unique.labeled',
-                      out=data_directory+outfile)
+                                       input=data_directory + infile + '.cleaned.downsampled.unique.labeled',
+                                       out=data_directory + outfile)
     print(muscle_command)
 
 
 if __name__ == "__main__":
     # reduce_and_align_sequences(infile='spikeprot0112.fasta',
-    #                            outfile='1_in_500.afa',
-    #                            reduction_factor=500,
+    #                            outfile='all_database_aligned.afa',
+    #                            reduction_factor=1,
     #                            length_cutoff=1200,
     #                            invalid_amino_acids_cutoff=1)
 
     # combine_two_databases('./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
     #                       'natural', './data/spike_protein_sequences/generated3.fasta', 'synthetic', 'combined.fasta')
 
-    print(data_dir)
-    muscle_command = MuscleCommandline(path_to_muscle_executable,
-                      input='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled',
-                      out='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/aligned.afa')
-    print(muscle_command)
+    # print(data_dir)
+    # muscle_command = MuscleCommandline(path_to_muscle_executable,
+    #                   input='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled',
+    #                   out='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/aligned.afa')
+    # print(muscle_command)
+    # remove_id_label_from_fasta_database(database='./data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled',
+    #                                     id_position=1,
+    #                                     outfile='./data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled.stripped')
+
+    # partition_fasta_database_into_chunks('./data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled.stripped',
+    #                                      chunk_size=1500,
+    #                                      outfile_prefix='./data/spike_protein_sequences/partitioned_database/spikeprot')
+
+    # muscle_command = MuscleCommandline(path_to_muscle_executable,
+    #                   input='path_to_infile',
+    #                   out='path_to_outfile')
+    # print(muscle_command)
+
+    check_all_sequences_have_same_length('./data/spike_protein_sequences/1_in_50_cleaned.fasta')

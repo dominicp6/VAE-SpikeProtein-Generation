@@ -19,20 +19,8 @@ import matplotlib.pyplot as plt
 
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (DO NOT CHANGE)
 
-# relative path of datasets
-data_dir = script_dir + '/data/spike_protein_sequences/'
-
-fasta_file = "../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa"
-fasta_sequences = SeqIO.parse(open(fasta_file), 'fasta')
-
-residue_distribution = defaultdict(lambda: {"A": 0, "R": 0, "N": 0, "D": 0, "C": 0, "Q": 0, "E": 0, "G": 0, "H": 0, "I": 0, "L": 0,
-                         "K": 0, "M": 0, "F": 0, "P": 0, "S": 0, "T": 0, "W": 0, "Y": 0, "V": 0, "-": 0})
-for fasta in fasta_sequences:
-    id_label, sequence = fasta.id, str(fasta.seq)
-    sequence_count = int(id_label.split('|')[0])
-    for position, letter in enumerate(sequence):
-        residue_distribution[position][letter] += sequence_count
-
+residue_distribution = defaultdict(lambda: defaultdict(lambda: {"A": 0, "R": 0, "N": 0, "D": 0, "C": 0, "Q": 0, "E": 0, "G": 0, "H": 0, "I": 0, "L": 0,
+                         "K": 0, "M": 0, "F": 0, "P": 0, "S": 0, "T": 0, "W": 0, "Y": 0, "V": 0, "-": 0}))
 
 def calculate_entropy_of_count_distribution(count_distribution):
     normalised_distribution = count_distribution/sum(count_distribution)
@@ -46,26 +34,59 @@ def calculate_conservation_score(entropy, maximum_entropy):
     return 1 - entropy/maximum_entropy
 
 
-conservation_vector = np.zeros(len(residue_distribution))
-for position, count_dictionary in residue_distribution.items():
-    entropy_of_position = calculate_entropy_of_count_distribution(np.fromiter(count_dictionary.values(), dtype=np.int64))
-    position_conservation_score = calculate_conservation_score(entropy_of_position, maximum_entropy=-np.log(21))
-    conservation_vector[position] = position_conservation_score
+# Function to calculate Chi-distance
+def chi2_distance(A, B):
+    # compute the chi-squared distance using above formula
+    chi = 0.5 * np.sum([((a - b) ** 2) / (a + b)
+                        for (a, b) in zip(A, B)])
 
+    return chi
 
-print(len(conservation_vector))
-print(np.count_nonzero(conservation_vector == 1))
-plt.plot(1-(1-conservation_vector)/np.max(1-conservation_vector), 'k', linewidth=0.75)
-plt.xlabel('Residue Number', fontsize=20)
-plt.ylabel('Conservation Score', fontsize=20)
-plt.xticks(fontsize=18)
-plt.yticks(fontsize=18)
-plt.margins(x=0, y=0)
-plt.ylim((0.00, 1.00))
-fig = plt.gcf()
-fig.set_size_inches(16.5, 10.5)
-fig.set_dpi(100)
-plt.show()
+if __name__ == "__main__":
+    # relative path of datasets
+    data_dir = script_dir + '/data/spike_protein_sequences/'
+
+    fasta_file = "../data/spike_protein_sequences/combined3,5,7,9,11,13,15,17.fasta"
+    fasta_sequences = SeqIO.parse(open(fasta_file), 'fasta')
+
+    seq_length = 0
+    for fasta in fasta_sequences:
+        id_label, sequence = fasta.id, str(fasta.seq)
+        seq_length = max(seq_length, len(sequence))
+        sequence_count = int(id_label.split('|')[0])
+        variant_name = id_label.split('|')[1]
+        for position, letter in enumerate(sequence):
+            residue_distribution[variant_name][position][letter] += sequence_count
+
+    variant_conservation_vectors = dict()
+    for variant_name, variant_residue_distribution in residue_distribution.items():
+        conservation_vector = np.zeros(seq_length)
+        for position, count_dictionary in variant_residue_distribution.items():
+            entropy_of_position = calculate_entropy_of_count_distribution(np.fromiter(count_dictionary.values(), dtype=np.int64))
+            position_conservation_score = calculate_conservation_score(entropy_of_position, maximum_entropy=-np.log(21))
+            conservation_vector[position] = position_conservation_score
+        variant_conservation_vectors[variant_name] = conservation_vector
+
+    for variant_name, conservation_vector in variant_conservation_vectors.items():
+        if variant_name != "synthetic":
+            plt.plot(conservation_vector, linewidth=0.75, label=variant_name)
+
+    plt.legend()
+    plt.xlabel('Residue Number', fontsize=20)
+    plt.ylabel('Conservation Score', fontsize=20)
+    plt.xticks(fontsize=18)
+    plt.yticks(fontsize=18)
+    plt.margins(x=0, y=0)
+    plt.ylim((0.60, 1.00))
+    fig = plt.gcf()
+    fig.set_size_inches(16.5, 10.5)
+    fig.set_dpi(100)
+    plt.show()
+
+    natural_conservation_score = variant_conservation_vectors['natural']
+    for variant_name, conservation_vector in variant_conservation_vectors.items():
+        print(f'natural-{variant_name} Chi-Squared distance: {chi2_distance(natural_conservation_score, conservation_vector)}')
+
 
 
 
