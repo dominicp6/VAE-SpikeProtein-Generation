@@ -1,0 +1,3 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+84_reference.fasta	N70I	0.9	0.9
+84_reference.fasta	S1248C	5.3	5.3

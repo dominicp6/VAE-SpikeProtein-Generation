@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+0_reference.fasta	V713A	-0.5	-0.5

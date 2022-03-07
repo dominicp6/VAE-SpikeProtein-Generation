@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+61_reference.fasta	N962D	-0.3	-0.3
