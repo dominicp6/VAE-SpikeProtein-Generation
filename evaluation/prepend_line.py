@@ -17,8 +17,23 @@ def prepend_line(file_name, line):
     os.rename(dummy_file, file_name)
 
 
+def pop_top_line(file_name):
+    with open(file_name, 'r+') as fp:
+        # read an store all lines into list
+        lines = fp.readlines()
+        # move file pointer to the beginning of a file
+        fp.seek(0)
+        # truncate the file
+        fp.truncate()
+
+        # start writing lines except the first line
+        # lines[1:] from line 2 to last line
+        fp.writelines(lines[1:])
+
+
 if __name__ == "__main__":
-    for i in range(88):
-        if i != 0:
-            prepend_line(f'./synthetic_point_mutations/{i}_reference.fasta', '>')
-            prepend_line(f'./synthetic_point_mutations/{i}_synthetic.fasta', '>')
+    for i in range(89):
+        pop_top_line(f'./synthetic_point_mutations/{i}_reference.fasta')
+        pop_top_line(f'./synthetic_point_mutations/{i}_synthetic.fasta')
+        prepend_line(f'./synthetic_point_mutations/{i}_reference.fasta', '>EmptyID')
+        prepend_line(f'./synthetic_point_mutations/{i}_synthetic.fasta', '>EmptyID')

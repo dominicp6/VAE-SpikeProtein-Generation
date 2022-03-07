@@ -61,12 +61,16 @@ if __name__ == "__main__":
         print(f'nat: {aligned_natural}')
         print(f'syn: {aligned_synthetic}')
 
-        aligned_natural = aligned_natural.replace('-', 'X')  # replace dashes with Xs for natural sequences so DDGun can read them properly
-        with open(f'./synthetic_point_mutations/{idx}_reference.fasta', 'w') as f:
-            print(aligned_natural, file=f)
-        with open(f'./synthetic_point_mutations/{idx}_synthetic.fasta', 'w') as f:
-            print(aligned_synthetic, file=f)
+
         with open(f'./synthetic_point_mutations/{idx}.muts', 'w') as f:
             print(generate_point_mutation_list(original_sequence=aligned_natural, mutated_sequence=aligned_synthetic),
                   file=f)
+
+        aligned_natural = aligned_natural.replace('-','X')  # replace dashes with Xs for natural sequences so DDGun can read them properly
+        with open(f'./synthetic_point_mutations/{idx}_reference.fasta', 'w') as f:
+            print('>EmptyID', file=f)
+            print(aligned_natural, file=f)
+        with open(f'./synthetic_point_mutations/{idx}_synthetic.fasta', 'w') as f:
+            print('>EmptyID', file=f)
+            print(aligned_synthetic, file=f)
 
