@@ -1,14 +1,14 @@
-
+import pandas as pd
 def get_delta_delta_g_from_file(filename):
 
     total_delta_delta_g = 0
 
-    with open(filename, 'w') as file:
+    with open(filename, 'r') as file:
         for line_number, line in enumerate(file):
             if line_number == 0:
                 continue
             else:
-                line_segments = line.split(' ')
+                line_segments = line.split('\t')
                 total_delta_delta_g += float(line_segments[-1])
 
     return total_delta_delta_g
@@ -16,5 +16,13 @@ def get_delta_delta_g_from_file(filename):
 
 if __name__ == "__main__":
 
-    for seq_number in range(141):
-        pass
+    ddg_sum_dict={}
+
+    for seq_number in range(90):
+        filename = './synthetic_point_mutations/'+ str(seq_number)+'.txt'
+        ddg_sum = get_delta_delta_g_from_file(filename)
+        ddg_sum_dict[str(seq_number)] = ddg_sum
+    print(ddg_sum_dict)
+    ddg_sum_df = pd.DataFrame.from_dict(ddg_sum_dict,orient='index', columns=['ddg_sum'])
+    print(ddg_sum_df)
+    ddg_sum_df.to_csv('ddg_sum_table.csv', index=True)
