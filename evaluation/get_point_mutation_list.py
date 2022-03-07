@@ -5,7 +5,7 @@ from Bio import pairwise2, SeqIO
 
 
 def find_closest_natural_sequence(synthetic_sequence, natural_sequences_database):
-    maximum_alignment_score = np.float('-inf')
+    maximum_alignment_score = float('-inf')
     aligned_natural_seq = ''
     aligned_synthetic_seq = ''
     for natural_seq in tqdm(natural_sequences_database):
@@ -41,7 +41,7 @@ def generate_point_mutation_list(original_sequence, mutated_sequence):
             continue
         elif mut_res != orig_res:
             # a mutation - add it to the list
-            point_mutation_list+=f"{orig_res}{res_index+1}{mut_res} \n"
+            point_mutation_list+=f"{orig_res}{res_index+1}{mut_res}\n"
         else:
             # no mutation - ignore
             continue
@@ -51,7 +51,7 @@ def generate_point_mutation_list(original_sequence, mutated_sequence):
 
 
 if __name__ == "__main__":
-    synthetic_db = SeqIO.parse('../data/high_intermediate_low.fasta', 'fasta')
+    synthetic_db = SeqIO.parse('../data/generated_sequences_with_conserved_regions.fasta', 'fasta')
 
     for idx, seq in enumerate(synthetic_db):
         natural_db = SeqIO.parse('../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa', 'fasta')
@@ -61,8 +61,11 @@ if __name__ == "__main__":
         print(f'nat: {aligned_natural}')
         print(f'syn: {aligned_synthetic}')
 
-        with open(f'./synthetic_point_mutations/{idx}.fasta', 'w') as f:
+        aligned_natural = aligned_natural.replace('-', 'X')  # replace dashes with Xs for natural sequences so DDGun can read them properly
+        with open(f'./synthetic_point_mutations/{idx}_reference.fasta', 'w') as f:
             print(aligned_natural, file=f)
+        with open(f'./synthetic_point_mutations/{idx}_synthetic.fasta', 'w') as f:
+            print(aligned_synthetic, file=f)
         with open(f'./synthetic_point_mutations/{idx}.muts', 'w') as f:
             print(generate_point_mutation_list(original_sequence=aligned_natural, mutated_sequence=aligned_synthetic),
                   file=f)
