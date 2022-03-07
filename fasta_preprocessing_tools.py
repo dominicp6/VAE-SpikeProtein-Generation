@@ -20,6 +20,29 @@ path_to_consensus_sequences = os.path.join(script_dir, "data", "spike_protein_se
 data_dir = os.path.join(script_dir, "data", "spike_protein_sequences")
 
 
+def _get_substring(string, mask):
+    return "".join([char for index, char in enumerate(string) if mask[index] is False])
+
+
+def remove_redundant_empty_residues(database, outfile):
+    db_seq = SeqIO.parse(database, 'fasta')
+    for id, seq in enumerate(db_seq):
+        if id == 0:
+            remove_by_residue_mask = [True]*len(seq.seq)
+        for residue_num, residue in enumerate(seq.seq):
+            if residue != "-" and remove_by_residue_mask[residue_num] == True:
+                if id < 10000: # if it is a very rare change then ignore it as a fluke
+                    remove_by_residue_mask[residue_num] = False
+
+    print(remove_by_residue_mask)
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    with open(outfile, "w") as out_file:
+        for seq in db_seq:
+            print(f">{seq.id}", file=out_file)
+            print(_get_substring(seq.seq, remove_by_residue_mask), file=out_file)
+
+
 def check_all_sequences_have_same_length(database):
     db_seq = SeqIO.parse(database, 'fasta')
 
@@ -43,9 +66,15 @@ def remove_id_label_from_fasta_database(database, id_position, outfile):
     with open(outfile, 'w') as out_file:
         for seq in tqdm(db_seq):
             seq_id_list = seq.id.split('|')
-            del seq_id_list[id_position]
-            print(f">{'|'.join(seq_id_list)}", file=out_file)
-            print(seq.seq, file=out_file)
+            try:
+                del seq_id_list[id_position]
+                print(f">{'|'.join(seq_id_list)}", file=out_file)
+                print(seq.seq, file=out_file)
+            except:
+                print(f">{'|'.join(seq_id_list)}", file=out_file)
+                print(seq.seq, file=out_file)
+
+
 
 
 def add_id_label_to_fasta_database(database, id_position, label, outfile):
@@ -109,6 +138,40 @@ def combine_two_databases(database1, database2, variant_database2, outfile, vari
         for seq in db2_seq:
             print(f">{seq.id}|{variant_database2}", file=out_file)
             print(seq.seq, file=out_file)
+
+def remove_all_sequences_with_label(infile, outfile, label):
+    db = SeqIO.parse(infile, 'fasta')
+    seq_2_label = dict()
+    seq_2_identifier = dict()
+    for seq in db:
+        seq_2_label[seq.seq] = seq.id.split('|')[1]
+        seq_2_identifier[seq.seq] = seq.id
+
+    seq_2_label = dict(sorted(seq_2_label.items(), key=lambda item: item[1], reverse=True))
+    with open(outfile, "w") as out_file:
+        for id, seq in enumerate(seq_2_label.keys()):
+            if seq_2_label[seq] != label:
+                print(f">{seq_2_identifier[seq]}", file=out_file)
+                print(seq, file=out_file)
+            else:
+                continue
+
+def keep_top_N_most_common_sequences(infile, outfile, N):
+    db = SeqIO.parse(infile, 'fasta')
+    seq_2_count = dict()
+    seq_2_identifier = dict()
+    for seq in db:
+        seq_2_count[seq.seq] = int(seq.id.split('|')[0])
+        seq_2_identifier[seq.seq] = seq.id
+
+    seq_2_count = dict(sorted(seq_2_count.items(), key=lambda item: item[1], reverse=True))
+    with open(outfile, "w") as out_file:
+        for id, seq in enumerate(seq_2_count.keys()):
+            if id < N:
+                print(f">{seq_2_identifier[seq]}", file=out_file)
+                print(seq, file=out_file)
+            else:
+                break
 
 
 def remove_incomplete_sequences_from_fasta(infile,
@@ -335,31 +398,22 @@ def reduce_and_align_sequences(infile: str,
 
 
 if __name__ == "__main__":
-    # reduce_and_align_sequences(infile='spikeprot0112.fasta',
-    #                            outfile='all_database_aligned.afa',
-    #                            reduction_factor=1,
-    #                            length_cutoff=1200,
-    #                            invalid_amino_acids_cutoff=1)
 
-    # combine_two_databases('./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
-    #                       'natural', './data/spike_protein_sequences/generated3.fasta', 'synthetic', 'combined.fasta')
 
-    # print(data_dir)
-    # muscle_command = MuscleCommandline(path_to_muscle_executable,
-    #                   input='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled',
-    #                   out='/home/dominic/PycharmProjects/VAE-SpikeProtein-Generation/data/spike_protein_sequences/aligned.afa')
-    # print(muscle_command)
-    # remove_id_label_from_fasta_database(database='./data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled',
-    #                                     id_position=1,
-    #                                     outfile='./data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled.stripped')
+    # combine_two_databases(database1 = './data/generated_high_medium_low.fasta',
+    #                       database2= './data/natural_downsampled.afa',
+    #                       variant_database2='natural',
+    #                       outfile='./data/generated_high_medium_low_natural.fasta')
+    #
+    #
+    #
+    # check_all_sequences_have_same_length('./data/generated_high_medium_low.fasta')
 
-    # partition_fasta_database_into_chunks('./data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled.unique.labeled.stripped',
-    #                                      chunk_size=1500,
-    #                                      outfile_prefix='./data/spike_protein_sequences/partitioned_database/spikeprot')
+    #keep_top_N_most_common_sequences('./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa', './data/natural_downsampled.afa', 300)
+    #remove_id_label_from_fasta_database(database='./data/spikeprot_0,45.afa', id_position=1, outfile='./data/spikeprot_0,452.afa')
+    #remove_all_sequences_with_label('./data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', './data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', 'natural')
+    remove_redundant_empty_residues('./data/spikeprot_0,452.afa', './data/spikeprot_final_dataset.afa')
+    # print(MuscleCommandline(path_to_muscle_executable,
+    #                  input='./data/generated_high_medium_low_natural.fasta',
+    #                  out='./data/generated_high_medium_low_natural_aligned.fasta'))
 
-    # muscle_command = MuscleCommandline(path_to_muscle_executable,
-    #                   input='path_to_infile',
-    #                   out='path_to_outfile')
-    # print(muscle_command)
-
-    check_all_sequences_have_same_length('./data/spike_protein_sequences/1_in_50_cleaned.fasta')

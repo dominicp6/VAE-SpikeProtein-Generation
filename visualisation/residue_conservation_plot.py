@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # relative path of datasets
     data_dir = script_dir + '/data/spike_protein_sequences/'
 
-    fasta_file = "../data/spike_protein_sequences/combined3,5,7,9,11,13,15,17.fasta"
+    fasta_file = "../data/spike_protein_sequences/spikeprot_bigger_dataset.afa"
     fasta_sequences = SeqIO.parse(open(fasta_file), 'fasta')
 
     seq_length = 0
@@ -54,7 +54,10 @@ if __name__ == "__main__":
         id_label, sequence = fasta.id, str(fasta.seq)
         seq_length = max(seq_length, len(sequence))
         sequence_count = int(id_label.split('|')[0])
-        variant_name = id_label.split('|')[1]
+        try:
+            variant_name = id_label.split('|')[1]
+        except:
+            variant_name = 'default'
         for position, letter in enumerate(sequence):
             residue_distribution[variant_name][position][letter] += sequence_count
 
@@ -77,7 +80,7 @@ if __name__ == "__main__":
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
     plt.margins(x=0, y=0)
-    plt.ylim((0.60, 1.00))
+    plt.ylim((0.40, 1.00))
     fig = plt.gcf()
     fig.set_size_inches(16.5, 10.5)
     fig.set_dpi(100)
