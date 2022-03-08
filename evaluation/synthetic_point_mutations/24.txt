@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+24_reference.fasta	K452N	0.5	0.5

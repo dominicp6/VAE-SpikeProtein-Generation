@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+83_reference.fasta	I71V	0.1	0.1

@@ -1,0 +1,4 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+66_reference.fasta	T96I	0.2	0.2
+66_reference.fasta	T490K	-2.3	-2.3
+66_reference.fasta	P693H	-0.6	-0.6

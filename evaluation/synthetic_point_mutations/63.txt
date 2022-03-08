@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+63_reference.fasta	S27A	-0.1	-0.1
