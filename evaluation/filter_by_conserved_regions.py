@@ -12,7 +12,10 @@ def get_conserved_regions_mask(database):
 
     index = 0
     for seq in database:
-        variant_name = seq.id.split('|')[1]
+        try:
+            variant_name = seq.id.split('|')[1]
+        except:
+            variant_name = 'none given'
         if variant_name == 'natural':
             if index == 0:
                 conserved_region_mask = [True]*len(seq.seq)
@@ -32,7 +35,10 @@ def get_conserved_regions_mask(database):
 def filter_by_conserved_regions(database, reference_sequence, conserved_region_mask):
     filtered_sequences = []
     for seq in database:
-        variant_name = seq.id.split('|')[1]
+        try:
+            variant_name = seq.id.split('|')[1]
+        except:
+            variant_name = 'none given'
         if variant_name != "natural":
             for residue_index, residue in enumerate(seq.seq):
                 if conserved_region_mask[residue_index] is True:
@@ -51,18 +57,25 @@ def save_sequence_list(sequence_list, filename):
             print(f">{seq.id}", file=file)
             print(seq.seq, file=file)
 
+    #TODO: temp - to remove
+    with open('11gram_with_conserved_regions_small.fasta', 'w') as file:
+        for id, seq in enumerate(sequence_list):
+            if id < 300:
+                print(f">{seq.id}", file=file)
+                print(seq.seq, file=file)
+
 
 
 if __name__ == "__main__":
     # Load sequences
-    sequences_database = load_database('../data/aligned_merged_generated_and_natural.afa')
+    sequences_database = load_database('../data/aligned_11gram_and_natural.afa')
 
     # conserved regions
     ref_seq, conserved_region_mask = get_conserved_regions_mask(sequences_database)
 
     # filter by conserved regions
-    sequences_database = load_database('../data/aligned_merged_generated_and_natural.afa')
+    sequences_database = load_database('../data/aligned_11gram_and_natural.afa')
     filtered_seqs = filter_by_conserved_regions(sequences_database, ref_seq, conserved_region_mask)
 
     # save filtered sequences to file
-    save_sequence_list(filtered_seqs, "../data/generated_sequences_with_conserved_regions.fasta")
+    save_sequence_list(filtered_seqs, "../data/11gram_with_conserved_regions.fasta")

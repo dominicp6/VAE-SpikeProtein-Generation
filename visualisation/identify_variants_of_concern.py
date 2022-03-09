@@ -56,6 +56,6 @@ if __name__ == "__main__":
     data_dir = os.path.join("..", "data", "spike_protein_sequences")
 
     label_fasta_file_sequences_with_closest_variant(infile="spikeprot0112.fasta.cleaned.downsampled.unique",
-                                                    outfile="spikeprot0112.fasta.cleaned.downsampled.unique.labeled2" ,
+                                                    outfile="spikeprot0112.fasta.cleaned.downsampled.unique.labeled2",
                                                     path_to_consensus_sequences=cons_sequences_src,
                                                     data_directory=data_dir)
