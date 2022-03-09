@@ -75,6 +75,31 @@ def remove_id_label_from_fasta_database(database, id_position, outfile):
                 print(seq.seq, file=out_file)
 
 
+def database_similarity(reference_database, example_database, save_unique=False, outfile=None):
+    def strip_alignment(seq):
+        return seq.replace('-', "")
+
+    db_ref = SeqIO.parse(reference_database, 'fasta')
+    uni_seq_ref = set(strip_alignment(seq.seq) for seq in db_ref)
+
+    db_exa = SeqIO.parse(example_database, 'fasta')
+    uni_seq_exa = set(strip_alignment(seq.seq) for seq in db_exa)
+
+    number_overlap = len(uni_seq_exa.intersection(uni_seq_ref))
+    num_exa = len(uni_seq_exa)
+    fraction_overlap = number_overlap/num_exa
+
+    print(f'Of the {num_exa} unique sequences in {example_database}, {number_overlap} of them also appear in {reference_database}.')
+    print(f'This corresponds to an overlap percentage of {round(fraction_overlap*100,1)}%.')
+
+    if save_unique is True:
+        original_sequences = uni_seq_exa.difference(uni_seq_ref)
+        db_exa = SeqIO.parse(example_database, 'fasta')
+        with open(outfile, 'w') as out_file:
+            for seq in db_exa:
+                if strip_alignment(seq.seq) in original_sequences:
+                    print(f'>{seq.id}', file=out_file)
+                    print(f'{seq.seq}', file=out_file)
 
 
 def add_id_label_to_fasta_database(database, id_position, label, outfile):
@@ -190,13 +215,17 @@ def remove_incomplete_sequences_from_fasta(infile,
     :param data_directory: Path to directory of infile and outfile.
     """
 
+    number_of_sequences = 0
+    number_of_complete_sequences = 0
     with open(os.path.join(data_directory, outfile), "w") as outfile:
         with open(os.path.join(data_directory, infile), "r") as infile:
             for sequence in tqdm(infile):
+                number_of_sequences += 1
                 # if the line is not a descriptor line
                 if sequence[0] != '>':
                     # if sequence is not corrupt
                     if len(sequence) > length_cutoff and sequence.count('X') < invalid_amino_acids_cutoff:
+                        number_of_complete_sequences += 1
                         outfile.write(descriptor_line)
                         outfile.write(sequence)
                     else:
@@ -204,6 +233,9 @@ def remove_incomplete_sequences_from_fasta(infile,
                 # temporarily store the descriptor
                 else:
                     descriptor_line = sequence
+
+    print(f'The database {infile} consists of {number_of_sequences} entries of which {number_of_complete_sequences}'
+          f'are complete.')
 
 
 def downsample_fasta_file(infile,
@@ -414,12 +446,21 @@ if __name__ == "__main__":
     #remove_all_sequences_with_label('./data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', './data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', 'natural')
     #remove_redundant_empty_residues('./data/spikeprot_0,452.afa', './data/spikeprot_final_dataset.afa')
     # print(MuscleCommandline(path_to_muscle_executable,
-    #                   input='./data/merged_generated_and_natural.fasta',
-    #                   out='./data/aligned_merged_generated_and_natural.afa'))
-    #
-    # combine_two_databases(database1='./data/FC003gen_high_intermediate.fasta',
-    #                       database2='./data/FC_003_gen_low_all.fasta',
-    #                       variant_database2='low',
-    #                       outfile='./data/FC003gen_high_intermediate_low.fasta')
+    #                   input='./data/random75_and_natural.fasta',
+    #                   out='./data/aligned_random75_and_natural.afa'))
+    print(MuscleCommandline(path_to_muscle_executable,
+                      input='./data/11gram_and_natural.fasta',
+                      out='./data/aligned_11gram_and_natural.afa'))
 
-    pass
+    # combine_two_databases(database1='./data/11gram_original.fasta',
+    #                       variant_database1='random75',
+    #                       database2='./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
+    #                       variant_database2='natural',
+    #                       outfile='./data/11gram_and_natural.fasta')
+
+    # database_similarity('./data/spike_protein_sequences/all_cleaned.fasta',
+    #                     f'./generated_up_to_70_mutations.unique', save_unique=True, outfile='./visualisation/random75_original.fasta')
+
+    # reduce_and_align_sequences('spikeprot0112.fasta', outfile='test', reduction_factor=1)
+
+
