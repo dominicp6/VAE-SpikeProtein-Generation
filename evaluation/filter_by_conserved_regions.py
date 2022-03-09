@@ -68,14 +68,14 @@ def save_sequence_list(sequence_list, filename):
 
 if __name__ == "__main__":
     # Load sequences
-    sequences_database = load_database('../data/aligned_11gram_and_natural.afa')
+    sequences_database = load_database('../data/FC033_all_original_and_natural.afa')
 
     # conserved regions
     ref_seq, conserved_region_mask = get_conserved_regions_mask(sequences_database)
 
     # filter by conserved regions
-    sequences_database = load_database('../data/aligned_11gram_and_natural.afa')
+    sequences_database = load_database('../data/FC033_all_original_and_natural.afa')
     filtered_seqs = filter_by_conserved_regions(sequences_database, ref_seq, conserved_region_mask)
 
     # save filtered sequences to file
-    save_sequence_list(filtered_seqs, "../data/11gram_with_conserved_regions.fasta")
+    save_sequence_list(filtered_seqs, "../data/FC003_with_conserved_regions.fasta")

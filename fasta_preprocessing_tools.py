@@ -449,18 +449,19 @@ if __name__ == "__main__":
     #                   input='./data/random75_and_natural.fasta',
     #                   out='./data/aligned_random75_and_natural.afa'))
     print(MuscleCommandline(path_to_muscle_executable,
-                      input='./data/11gram_and_natural.fasta',
-                      out='./data/aligned_11gram_and_natural.afa'))
-
-    # combine_two_databases(database1='./data/11gram_original.fasta',
-    #                       variant_database1='random75',
+                      input='./data/FC003_all_originl_and_natural.fasta',
+                      out='./data/FC033_all_original_and_natural.afa'))
+    #
+    # combine_two_databases(database1='./data/FC003_all_original.fasta',
     #                       database2='./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
     #                       variant_database2='natural',
-    #                       outfile='./data/11gram_and_natural.fasta')
+    #                       outfile='./data/FC003_all_originl_and_natural.fasta')
 
-    # database_similarity('./data/spike_protein_sequences/all_cleaned.fasta',
-    #                     f'./generated_up_to_70_mutations.unique', save_unique=True, outfile='./visualisation/random75_original.fasta')
+    # database_similarity('./data/spike_protein_sequences/spikeprot0112.fasta.cleaned',
+    #                     f'./data/FC003gen_high_intermediate_low.fasta', save_unique=True, outfile='./data/FC003_all_original.fasta')
 
     # reduce_and_align_sequences('spikeprot0112.fasta', outfile='test', reduction_factor=1)
+
+
 
 
