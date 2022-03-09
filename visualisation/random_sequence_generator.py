@@ -104,21 +104,21 @@ def generate_randomly_mutated_sequences(database_infile, N, max_number_of_mutati
 if __name__ == "__main__":
     from fasta_preprocessing_tools import reduce_to_unique_sequences
 
-    n_gram_list = [11, 13, 15, 17]
-    for n in n_gram_list:
-        lm = generate_random_ngram_sequences("1_in_500_cleaned_aligned.afa",
-                                             8880,
-                                             # number of sequences to be generated (same as in experimental database)
-                                             1282,
-                                             # length of sequences to be generated (same as in experimental database)
-                                             n=n,  # n gram number
-                                             outfile=f'random_{n}gram_sequences')
-        reduce_to_unique_sequences(infile=f"random_{n}gram_sequences",
-                                   outfile=f"random_{n}gram_sequences.unique",
-                                   data_directory='.')
-
-
-    #generate_randomly_mutated_sequences("1_in_500_cleaned_aligned.afa", 8880, 75, "generated_up_to_70_mutations")
-    # reduce_to_unique_sequences(infile=f"generated_up_to_70_mutations",
-    #                                outfile=f"generated_up_to_70_mutations.unique",
+    # n_gram_list = [11, 13, 15, 17]
+    # for n in n_gram_list:
+    #     lm = generate_random_ngram_sequences("1_in_500_cleaned_aligned.afa",
+    #                                          8880,
+    #                                          # number of sequences to be generated (same as in experimental database)
+    #                                          1282,
+    #                                          # length of sequences to be generated (same as in experimental database)
+    #                                          n=n,  # n gram number
+    #                                          outfile=f'random_{n}gram_sequences')
+    #     reduce_to_unique_sequences(infile=f"random_{n}gram_sequences",
+    #                                outfile=f"random_{n}gram_sequences.unique",
     #                                data_directory='.')
+
+
+    # generate_randomly_mutated_sequences("1_in_500_cleaned_aligned.afa", 8880, 75, "generated_up_to_75_mutations")
+    # reduce_to_unique_sequences(infile=f"generated_up_to_75_mutations",
+    #                                 outfile=f"generated_up_to_75_mutations.unique",
+    #                                 data_directory='.')
