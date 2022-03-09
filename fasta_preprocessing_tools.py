@@ -413,7 +413,13 @@ if __name__ == "__main__":
     #remove_id_label_from_fasta_database(database='./data/spikeprot_0,45.afa', id_position=1, outfile='./data/spikeprot_0,452.afa')
     #remove_all_sequences_with_label('./data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', './data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', 'natural')
     #remove_redundant_empty_residues('./data/spikeprot_0,452.afa', './data/spikeprot_final_dataset.afa')
-    print(MuscleCommandline(path_to_muscle_executable,
-                      input='./data/merged_generated_and_natural.fasta',
-                      out='./data/aligned_merged_generated_and_natural.afa'))
+    # print(MuscleCommandline(path_to_muscle_executable,
+    #                   input='./data/merged_generated_and_natural.fasta',
+    #                   out='./data/aligned_merged_generated_and_natural.afa'))
+    #
+    # combine_two_databases(database1='./data/FC003gen_high_intermediate.fasta',
+    #                       database2='./data/FC_003_gen_low_all.fasta',
+    #                       variant_database2='low',
+    #                       outfile='./data/FC003gen_high_intermediate_low.fasta')
 
+    pass
