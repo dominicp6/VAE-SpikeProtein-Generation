@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+78_reference.fasta	Y140D	-2.5	-2.5

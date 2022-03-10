@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+88_reference.fasta	K496E	-0.1	-0.1

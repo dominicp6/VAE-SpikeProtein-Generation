@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+12_reference.fasta	R506Q	-0.6	-0.6

@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+82_reference.fasta	T490K	-1.9	-1.9

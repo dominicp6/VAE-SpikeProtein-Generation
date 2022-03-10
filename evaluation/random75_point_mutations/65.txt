@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+65_reference.fasta	N776K	-0.9	-0.9

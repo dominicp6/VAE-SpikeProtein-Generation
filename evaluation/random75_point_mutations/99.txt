@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+99_reference.fasta	S233L	1.1	1.1

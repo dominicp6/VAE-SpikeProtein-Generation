@@ -1,0 +1,3 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+8_reference.fasta	I97T	-0.4	-0.4
+8_reference.fasta	P386S	-0.4	-0.4

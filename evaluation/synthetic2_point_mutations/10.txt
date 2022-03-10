@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+10_reference.fasta	I216L	-1.6	-1.6

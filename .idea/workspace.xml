@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e8e13fc1-3229-43d5-aec0-040c3410f734" name="Changes" comment="add random and 11gram" />
+    <list default="true" id="e8e13fc1-3229-43d5-aec0-040c3410f734" name="Changes" comment="unversioned files">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/get_delta_delta_G.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/get_delta_delta_G.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,7 +57,7 @@
       <recent name="C:\Users\sebestyenkamp\OneDrive - University of Edinburgh\courses\sem2\cdt_group_project\VAE-SpikeProtein-Generation\visualisation" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.prepend_line">
+  <component name="RunManager" selected="Python.get_delta_delta_G">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="VAE-SpikeProtein-Generation" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,8 +183,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.prepend_line" />
         <item itemvalue="Python.get_delta_delta_G" />
+        <item itemvalue="Python.prepend_line" />
         <item itemvalue="Python.get_point_mutation_list" />
         <item itemvalue="Python.identify_variants_of_concern" />
         <item itemvalue="Python.epitope_mask" />
@@ -207,7 +210,7 @@
       <workItem from="1643990178953" duration="773000" />
       <workItem from="1644161200004" duration="10259000" />
       <workItem from="1644939178340" duration="769000" />
-      <workItem from="1646571887801" duration="18645000" />
+      <workItem from="1646571887801" duration="21237000" />
     </task>
     <task id="LOCAL-00001" summary="dssp and fasta to epitope mask, with median SASA">
       <created>1643796645443</created>
@@ -307,7 +310,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646832439067</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="unversioned files">
+      <created>1646832506438</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1646832506439</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -338,7 +348,8 @@
     <MESSAGE value="evaluate ddgun results" />
     <MESSAGE value="correct synthetic fasta first line" />
     <MESSAGE value="add random and 11gram" />
-    <option name="LAST_COMMIT_MESSAGE" value="add random and 11gram" />
+    <MESSAGE value="unversioned files" />
+    <option name="LAST_COMMIT_MESSAGE" value="unversioned files" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$epitope_mask.coverage" NAME="epitope_mask Coverage Results" MODIFIED="1643910697968" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
