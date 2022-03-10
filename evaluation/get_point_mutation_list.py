@@ -51,7 +51,7 @@ def generate_point_mutation_list(original_sequence, mutated_sequence):
 
 
 if __name__ == "__main__":
-    synthetic_db = SeqIO.parse('../data/11gram_with_conserved_regions_small.fasta', 'fasta')
+    synthetic_db = SeqIO.parse('../data/FC003_with_conserved_regions.fasta', 'fasta')
 
     for idx, seq in enumerate(synthetic_db):
         natural_db = SeqIO.parse('../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa', 'fasta')
@@ -62,15 +62,15 @@ if __name__ == "__main__":
         print(f'syn: {aligned_synthetic}')
 
 
-        with open(f'./11gram_point_mutations/{idx}.muts', 'w') as f:
+        with open(f'./synthetic2_point_mutations/{idx}.muts', 'w') as f:
             print(generate_point_mutation_list(original_sequence=aligned_natural, mutated_sequence=aligned_synthetic),
                   file=f)
 
         aligned_natural = aligned_natural.replace('-','X')  # replace dashes with Xs for natural sequences so DDGun can read them properly
-        with open(f'./11gram_point_mutations/{idx}_reference.fasta', 'w') as f:
-            print(f'>11gram_ref_{idx}', file=f)
+        with open(f'./synthetic2_point_mutations/{idx}_reference.fasta', 'w') as f:
+            print(f'>VAE_ref_{idx}', file=f)
             print(aligned_natural, file=f)
-        with open(f'./11gram_point_mutations/{idx}_synthetic.fasta', 'w') as f:
-            print(f'>11gram_{idx}', file=f)
+        with open(f'./synthetic2_point_mutations/{idx}_synthetic.fasta', 'w') as f:
+            print(f'>VAE_{idx}', file=f)
             print(aligned_synthetic, file=f)
 
