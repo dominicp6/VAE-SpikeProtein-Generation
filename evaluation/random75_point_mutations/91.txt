@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+91_reference.fasta	D1272Y	0.2	0.2

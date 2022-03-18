@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+2_reference.fasta	K692N	0.7	0.7

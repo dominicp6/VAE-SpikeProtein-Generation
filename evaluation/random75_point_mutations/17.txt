@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+17_reference.fasta	K982N	1.6	1.6

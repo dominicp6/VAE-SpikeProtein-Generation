@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+72_reference.fasta	T728I	0.0	0.0

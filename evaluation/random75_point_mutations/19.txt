@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+19_reference.fasta	K777N	0.9	0.9

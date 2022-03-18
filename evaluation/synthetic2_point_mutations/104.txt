@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+104_reference.fasta	T580K	-2.0	-2.0

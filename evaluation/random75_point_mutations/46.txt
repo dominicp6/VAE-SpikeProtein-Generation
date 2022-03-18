@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+46_reference.fasta	A582D	-0.5	-0.5

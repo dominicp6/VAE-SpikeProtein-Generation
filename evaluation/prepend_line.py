@@ -32,8 +32,8 @@ def pop_top_line(file_name):
 
 
 if __name__ == "__main__":
-    for i in range(89):
+    for i in range(90):
         pop_top_line(f'./synthetic_point_mutations/{i}_reference.fasta')
         pop_top_line(f'./synthetic_point_mutations/{i}_synthetic.fasta')
-        prepend_line(f'./synthetic_point_mutations/{i}_reference.fasta', '>EmptyID')
-        prepend_line(f'./synthetic_point_mutations/{i}_synthetic.fasta', '>EmptyID')
+        prepend_line(f'./synthetic_point_mutations/{i}_reference.fasta', f'>REF_for_VAE_{i}')
+        prepend_line(f'./synthetic_point_mutations/{i}_synthetic.fasta', f'>VAE_{i}')

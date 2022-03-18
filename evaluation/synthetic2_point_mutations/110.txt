@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+110_reference.fasta	N534Y	1.2	1.2

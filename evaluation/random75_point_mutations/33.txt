@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+33_reference.fasta	F993L	-1.1	-1.1

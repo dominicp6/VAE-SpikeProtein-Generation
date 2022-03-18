@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+98_reference.fasta	L485R	-0.7	-0.7

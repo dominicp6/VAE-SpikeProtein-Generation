@@ -34,6 +34,14 @@ def get_top_N_most_stable_sequences(path_to_sequences, ddgun_csv_file, N):
 
 
 if __name__ == "__main__":
-    get_top_N_most_stable_sequences('./synthetic_point_mutations', 'ddg_sum_table.csv', 10)
+
+    #foldername = 'synthetic_point_mutations'
+    #ddg_sum_file = 'ddg_sum_table.csv'
+    foldername = '11gram_point_mutations'
+    #foldername = 'random75_point_mutations'
+    #foldername = 'synthetic2_point_mutations'
+    ddg_sum_file = foldername + '_ddg_sum_table.csv'
+
+    get_top_N_most_stable_sequences('./' + foldername, ddg_sum_file, 10)
 
 

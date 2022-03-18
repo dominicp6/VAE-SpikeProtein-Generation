@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+13_reference.fasta	L384S	-2.1	-2.1

@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+68_reference.fasta	K511T	2.0	2.0

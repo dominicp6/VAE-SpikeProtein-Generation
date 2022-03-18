@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+74_reference.fasta	A700V	1.4	1.4
