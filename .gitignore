@@ -3,9 +3,9 @@
 /data/spike_protein_sequences/1_in_50_cleaned.fasta
 /visualisation/.ipynb_checkpoints/2D_protein_map-checkpoint.ipynb
 /evaluation/synthetic_point_mutations_10_most_stable/11_synthetic.fasta
-/data/11gram_and_natural.fasta
+/data/generated_sequences/LanguageModel/11gram_and_natural.fasta
 /visualisation/11gram_original.fasta
-/data/11gram_with_conserved_regions.fasta
+/data/generated_sequences/LanguageModel/11gram_with_conserved_regions.fasta
 /evaluation/synthetic_point_mutations_10_most_stable/14_synthetic.fasta
 /evaluation/synthetic_point_mutations_10_most_stable/18_synthetic.fasta
 /evaluation/synthetic_point_mutations_10_most_stable/20_synthetic.fasta
@@ -16,41 +16,41 @@
 /evaluation/synthetic_point_mutations_10_most_stable/37_synthetic.fasta
 /evaluation/synthetic_point_mutations_10_most_stable/40_synthetic.fasta
 /data/spike_protein_sequences/aligned.afa
-/data/aligned_11gram_and_natural.afa
-/data/aligned_merged_generated_and_natural.afa
-/data/aligned_random75_and_natural.afa
+/data/generated_sequences/LanguageModel/aligned_11gram_and_natural.afa
+/data/generated_sequences/VAE/Version 3/gen3_merged_natural_aligned.afa
+/data/generated_sequences/Random75/aligned_random75_and_natural.afa
 /data/spike_protein_sequences/all_cleaned.fasta
 /data/spike_protein_sequences/combined,13,randSub.fasta
 /combined,randSub.fasta
 /combined.fasta
 /data/spike_protein_sequences/combined3,5,7,9,11,13,15,17.fasta
-/combined3,5,7,9,11,13,15.fasta
-/combined3,5,7,9,11,13.fasta
-/combined3,5,7,9,11.fasta
-/combined3,5,7,9.fasta
-/combined3,5,7.fasta
-/combined3,5.fasta
-/combined3.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3,5,7,9,11,13,15.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3,5,7,9,11,13.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3,5,7,9,11.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3,5,7,9.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3,5,7.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3,5.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/combined3.fasta
 /data/spike_protein_sequences/combined7,9.fasta
-/data/generated_high_medium_low_natural.fasta
+/data/generated_sequences/VAE/Version 3/gen3_merged_natural.fasta
 /data/spike_protein_sequences/generated_high_medium_low_natural_aligned.fasta
-/data/generated_sequences_with_conserved_regions.fasta
+/data/generated_sequences/VAE/Version 3/gen3_merged_conserved_regions.fasta
 /generated_up_to_70_mutations.unique
 /.idea/misc.xml
 /.idea/modules.xml
 /data/natural_downsampled.afa
 /.idea/inspectionProfiles/profiles_settings.xml
-/data/random75_and_natural.fasta
+/data/generated_sequences/Random75/random75_and_natural.fasta
 /visualisation/random75_original.fasta
-/data/random75_with_conserved_regions.fasta
-/random_3gram_sequences.unique
-/random_5gram_sequences.unique
-/random_7gram_sequences.unique
-/random_9gram_sequences.unique
-/random_11gram_sequences.unique
-/random_13gram_sequences.unique
-/random_15gram_sequences.unique
-/random_17gram_sequences.unique
+/data/generated_sequences/Random75/random75_with_conserved_regions.fasta
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_3gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_5gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_7gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_9gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_11gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_13gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_15gram_sequences.unique
+/data/generated_sequences/LanguageModel/Non-optimal Models/random_17gram_sequences.unique
 /data/spike_protein_sequences/spikeprot0112.fasta
 /data/spike_protein_sequences/spikeprot0112.fasta.cleaned
 /data/spike_protein_sequences/spikeprot0112.fasta.cleaned.downsampled
