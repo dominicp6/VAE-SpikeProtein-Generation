@@ -17,8 +17,8 @@ def get_delta_delta_g_from_file(filename):
 if __name__ == "__main__":
 
     ddg_sum_dict={}
-    #foldername = 'synthetic_point_mutations'
-    foldername = 'synthetic2_point_mutations'
+    #foldername = 'gen2_point_mutations'
+    foldername = 'gen3_point_mutations'
     #foldername = '11gram_point_mutations'
     #foldername = 'random75_point_mutations'
     for seq_number in range(117):

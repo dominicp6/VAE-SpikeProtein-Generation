@@ -57,25 +57,26 @@ def save_sequence_list(sequence_list, filename):
             print(f">{seq.id}", file=file)
             print(seq.seq, file=file)
 
-    #TODO: temp - to remove
-    with open('11gram_with_conserved_regions_small.fasta', 'w') as file:
-        for id, seq in enumerate(sequence_list):
-            if id < 300:
-                print(f">{seq.id}", file=file)
-                print(seq.seq, file=file)
 
 
-
-if __name__ == "__main__":
+def save_sequences_that_obey_conserved_regions(input, output):
     # Load sequences
-    sequences_database = load_database('../data/FC033_all_original_and_natural.afa')
+    sequences_database = load_database(input)
 
     # conserved regions
     ref_seq, conserved_region_mask = get_conserved_regions_mask(sequences_database)
 
     # filter by conserved regions
-    sequences_database = load_database('../data/FC033_all_original_and_natural.afa')
+    sequences_database = load_database(input)
     filtered_seqs = filter_by_conserved_regions(sequences_database, ref_seq, conserved_region_mask)
 
     # save filtered sequences to file
-    save_sequence_list(filtered_seqs, "../data/FC003_with_conserved_regions.fasta")
+    save_sequence_list(filtered_seqs, output)
+
+
+
+
+
+if __name__ == "__main__":
+    save_sequences_that_obey_conserved_regions('../data/FC033_all_original_and_natural.afa',
+                                               "../data/FC003_with_conserved_regions.fasta")
