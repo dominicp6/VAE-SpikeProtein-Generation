@@ -1,4 +1,3 @@
-import numpy as np
 from tqdm import tqdm
 from Bio import pairwise2, SeqIO
 
@@ -49,28 +48,42 @@ def generate_point_mutation_list(original_sequence, mutated_sequence):
     return point_mutation_list
 
 
+def generate_point_mutation_lists_for_entire_database(database, exp_name):
+    synthetic_db = SeqIO.parse(database, 'fasta')
+    seq_to_count_dict = dict()
+    seq_to_id_dict = dict()
 
-if __name__ == "__main__":
-    synthetic_db = SeqIO.parse('../data/FC003_with_conserved_regions.fasta', 'fasta')
+    for seq in synthetic_db:
+        variant = seq.id
+        count = int(seq.id.split('|')[0])
+        seq_to_count_dict[seq.seq] = count
+        seq_to_id_dict[seq.seq] = variant
 
-    for idx, seq in enumerate(synthetic_db):
+    sequences_in_descending_count_order = \
+        [seq for seq, count in sorted(seq_to_count_dict.items(), key=lambda item: item[1], reverse=True)]
+
+    for idx, seq in enumerate(sequences_in_descending_count_order):
+        print(seq)
+        print(seq_to_count_dict[seq])
         natural_db = SeqIO.parse('../data/spike_protein_sequences/1_in_500_cleaned_aligned.afa', 'fasta')
-        aligned_synthetic, aligned_natural, minimum_alignment_score = find_closest_natural_sequence(seq.seq, natural_db)
+        aligned_synthetic, aligned_natural, minimum_alignment_score = find_closest_natural_sequence(seq, natural_db)
 
         print(f'Found a closely aligned sequence with alignment score {minimum_alignment_score}.')
         print(f'nat: {aligned_natural}')
         print(f'syn: {aligned_synthetic}')
 
-
-        with open(f'./synthetic2_point_mutations/{idx}.muts', 'w') as f:
+        with open(f'./{exp_name}_point_mutations/{idx}.muts', 'w') as f:
             print(generate_point_mutation_list(original_sequence=aligned_natural, mutated_sequence=aligned_synthetic),
                   file=f)
 
         aligned_natural = aligned_natural.replace('-','X')  # replace dashes with Xs for natural sequences so DDGun can read them properly
-        with open(f'./synthetic2_point_mutations/{idx}_reference.fasta', 'w') as f:
-            print(f'>VAE_ref_{idx}', file=f)
+        with open(f'./{exp_name}_point_mutations/{idx}_reference.fasta', 'w') as f:
+            print(f'>Ref for seq {idx}', file=f)
             print(aligned_natural, file=f)
-        with open(f'./synthetic2_point_mutations/{idx}_synthetic.fasta', 'w') as f:
-            print(f'>VAE_{idx}', file=f)
+        with open(f'./{exp_name}_point_mutations/{idx}_synthetic.fasta', 'w') as f:
+            print(f'>Seq {idx} | {seq_to_id_dict[seq]}', file=f)
             print(aligned_synthetic, file=f)
+
+
+
 

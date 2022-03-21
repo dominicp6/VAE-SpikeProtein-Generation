@@ -435,7 +435,7 @@ if __name__ == "__main__":
     # combine_two_databases(database1 = './data/generated_high_medium_low.fasta',
     #                       database2= './data/natural_downsampled.afa',
     #                       variant_database2='natural',
-    #                       outfile='./data/generated_high_medium_low_natural.fasta')
+    #                       outfile='./data/gen3_merged_natural.fasta')
     #
     #
     #
@@ -443,7 +443,7 @@ if __name__ == "__main__":
 
     #keep_top_N_most_common_sequences('./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa', './data/natural_downsampled.afa', 300)
     #remove_id_label_from_fasta_database(database='./data/spikeprot_0,45.afa', id_position=1, outfile='./data/spikeprot_0,452.afa')
-    #remove_all_sequences_with_label('./data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', './data/spike_protein_sequences/generated_high_medium_low_aligned.fasta', 'natural')
+    #remove_all_sequences_with_label('./data/spike_protein_sequences/gen3_merged_aligned.fasta', './data/spike_protein_sequences/gen3_merged_aligned.fasta', 'natural')
     #remove_redundant_empty_residues('./data/spikeprot_0,452.afa', './data/spikeprot_final_dataset.afa')
     # print(MuscleCommandline(path_to_muscle_executable,
     #                   input='./data/random75_and_natural.fasta',
