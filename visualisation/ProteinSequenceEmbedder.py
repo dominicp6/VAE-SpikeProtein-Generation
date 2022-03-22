@@ -100,18 +100,31 @@ class ProteinSequenceEmbedder:
         sequence_embeddings = reducer.fit_transform(encoded_sequences)
         return sequence_embeddings
 
-    def _get_sizes_legend_handles_and_labels(self, marker_size):
+    def _get_sizes_legend_handles_and_labels(self, marker_size, marker_size_power_scaling):
         def round_sig(x, sig=2):
             return float('{:.{p}g}'.format(x, p=sig))
 
         max_size = round_sig(max(self.embedding_data['frequencies']), sig=2)
-        numbers = [round_sig(num, sig=2) for num in np.logspace(0, np.log10(max_size), num=5, base=10)]
-        handles = tuple([plt.scatter([], [], s=num*marker_size, marker='o', color='#555555') for num in numbers])
+        min_size = round_sig(min(self.embedding_data['frequencies']), sig=2)
+        numbers = [round_sig(num, sig=2) for num in np.logspace(np.log10(min_size), np.log10(max_size), num=5, base=10)]
+        handles = tuple([plt.scatter([], [], s=(num)**(2/marker_size_power_scaling) * marker_size, marker='o', color='#555555') for num in numbers])
         labels = tuple([str(int(num)) for num in numbers])
 
         return handles, labels
 
-    def plot_embedding_map(self, marker_size=5.0, descriptor_number=3, color_map='Set2', save_image=False):
+    def plot_embedding_map(self,
+                           marker_size=5.0,
+                           descriptor_number=3,
+                           color_map='Set2',
+                           save_image=False,
+                           marker_size_power_scaling=2,
+                           hide_meta_data=False,
+                           title=None,
+                           title_fontsize=20,
+                           axis_fontsize=12,
+                           axis_title_fontsize=15,
+                           legend_fontsize=13,
+                           legend_title_fontsize=14):
         """
         Plots a 2D map from a list of embeddings and their associated sequence frequency.
 
@@ -122,7 +135,9 @@ class ProteinSequenceEmbedder:
                                   3 - variant label of sequence
         """
 
-        marker_sizes = [frequency * marker_size for frequency in self.embedding_data['frequencies']]
+        marker_sizes = [(frequency)**(2/marker_size_power_scaling) * marker_size for frequency in self.embedding_data['frequencies']]
+        plt.rc('legend', fontsize=legend_fontsize)
+        plt.rcParams['legend.title_fontsize'] = legend_title_fontsize
 
         # TODO: fix this for dates
         label_to_class_number = dict()
@@ -139,32 +154,42 @@ class ProteinSequenceEmbedder:
                              self.embedding_data['embeddings'][:, 1],
                              c=class_numbers,                 # variant class information
                              s=marker_sizes,
-                             alpha=0.25,
+                             alpha=0.125,
                              cmap=plt.get_cmap(color_map))
 
         # legends
-        labels_legend = ax.legend(handles=scatter.legend_elements()[0], labels=label_to_class_number.keys(), loc="lower left", title="Variant")     # variant legend
-        ax.add_artist(labels_legend)
-        handles, size_labels = self._get_sizes_legend_handles_and_labels(marker_size)
-        plt.legend(handles, size_labels, loc="lower right", title="Frequency", labelspacing=4.2, borderpad=3.5, handletextpad=2.5)          # frequency legend
+        labels_legend = ax.legend(handles=scatter.legend_elements()[0],
+                                  labels=label_to_class_number.keys(),
+                                  loc="lower left",
+                                  title="Variant")     # variant legend
+        #ax.add_artist(labels_legend)
+        #handles, size_labels = self._get_sizes_legend_handles_and_labels(marker_size, marker_size_power_scaling)
+        #plt.legend(handles, size_labels, loc="lower right", title="Frequency", labelspacing=2.5, borderpad=2, handletextpad=1.5)          # frequency legend
 
         # title, labels and aspect ratio
         ax.set_aspect('equal', 'datalim')
         fig.set_size_inches(15, 15)
         plt.margins(0.25)
-        ax.set_title('2D embeddings of SARS-COV19 spike proteins', fontsize=20)
-        ax.set_xlabel(f'{self.embedding_type} 1')
-        ax.set_ylabel(f'{self.embedding_type} 2')
+        if title is not None:
+            ax.set_title(title, fontsize=title_fontsize)
+        ax.set_xlabel(f'{self.embedding_type} 1', fontsize=axis_title_fontsize)
+        ax.set_ylabel(f'{self.embedding_type} 2', fontsize=axis_title_fontsize)
+
+        plt.xticks(fontsize=axis_fontsize)
+        plt.yticks(fontsize=axis_fontsize)
 
         # annotate with meta data
-        ax.text(0.95, 0.95, '\n'.join(self.embedding_data['meta_data']),
-                       horizontalalignment='right', verticalalignment='top',
-                       transform=plt.gca().transAxes)
-
-        plt.show()
+        if not hide_meta_data:
+            ax.text(0.95, 0.95, '\n'.join(self.embedding_data['meta_data']),
+                           horizontalalignment='right', verticalalignment='top',
+                           transform=plt.gca().transAxes)
 
         if save_image:
-            plt.savefig(f'{self.embedding_type}_{self.embedding_data["meta_data"]}', format='pdf')
+            plt.savefig(f'{self.embedding_type}_{self.embedding_data["meta_data"]}.pdf',
+                        format='pdf',
+                        bbox_inches='tight')
+
+        plt.show()
 
     @staticmethod
     def _parse_sequence_descriptors(descriptors):
@@ -242,10 +267,18 @@ class ProteinSequenceEmbedder:
                                infile,
                                hyperparameters=None,
                                marker_size=1,
+                               marker_size_power_scaling=2,
                                descriptor_number=3,
                                color_map='Set2',
                                mask=None,
-                               save_image=False):
+                               save_image=False,
+                               hide_meta_data=False,
+                               title=None,
+                               title_fontsize=20,
+                               axis_fontsize=12,
+                               axis_title_fontsize=15,
+                               legend_fontsize=13,
+                               legend_title_fontsize=14):
         """
         Plots a 2D representation of the dimensionality-reduced embeddings of the encoded sequences in a fasta database.
 
@@ -260,6 +293,14 @@ class ProteinSequenceEmbedder:
 
         self.embed_sequences(infile=infile, hyperparameters=hyperparameters, mask=mask)
         self.plot_embedding_map(marker_size=marker_size,
+                                marker_size_power_scaling=marker_size_power_scaling,
                                 descriptor_number=descriptor_number,
                                 color_map=color_map,
-                                save_image=save_image)
+                                save_image=save_image,
+                                hide_meta_data=hide_meta_data,
+                                title=title,
+                                title_fontsize=title_fontsize,
+                                axis_fontsize=axis_fontsize,
+                                axis_title_fontsize=axis_title_fontsize,
+                                legend_fontsize=legend_fontsize,
+                                legend_title_fontsize=legend_title_fontsize)

@@ -181,6 +181,22 @@ def remove_all_sequences_with_label(infile, outfile, label):
             else:
                 continue
 
+def remove_all_sequences_without_label(infile, outfile):
+    db = SeqIO.parse(infile, 'fasta')
+    seq_2_identifier = dict()
+    for seq in db:
+        try:
+            seq.id.split('|')[1]
+            seq_2_identifier[seq.seq] = seq.id
+        except:
+            pass
+
+    with open(outfile, "w") as out_file:
+        for id, seq in enumerate(seq_2_identifier.keys()):
+            print(f">{seq_2_identifier[seq]}", file=out_file)
+            print(seq, file=out_file)
+
+
 def keep_top_N_most_common_sequences(infile, outfile, N):
     db = SeqIO.parse(infile, 'fasta')
     seq_2_count = dict()
@@ -197,6 +213,16 @@ def keep_top_N_most_common_sequences(infile, outfile, N):
                 print(seq, file=out_file)
             else:
                 break
+
+def get_sequence_count_info(infile):
+    db = SeqIO.parse(infile, 'fasta')
+    seq_2_count = dict()
+    seq_2_identifier = dict()
+    for seq in db:
+        seq_2_count[seq.seq] = int(seq.id.split('|')[0])
+        seq_2_identifier[seq.seq] = seq.id
+
+    print(f'The database has {len(seq_2_count.keys())} entries with a combined sequence count of {sum(seq_2_count.values())}')
 
 
 def remove_incomplete_sequences_from_fasta(infile,
@@ -430,37 +456,24 @@ def reduce_and_align_sequences(infile: str,
 
 
 if __name__ == "__main__":
-
-
-    # combine_two_databases(database1 = './data/generated_high_medium_low.fasta',
-    #                       database2= './data/natural_downsampled.afa',
-    #                       variant_database2='natural',
-    #                       outfile='./data/gen3_merged_natural.fasta')
-    #
-    #
-    #
-    # check_all_sequences_have_same_length('./data/generated_high_medium_low.fasta')
-
-    #keep_top_N_most_common_sequences('./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa', './data/natural_downsampled.afa', 300)
-    #remove_id_label_from_fasta_database(database='./data/spikeprot_0,45.afa', id_position=1, outfile='./data/spikeprot_0,452.afa')
-    #remove_all_sequences_with_label('./data/spike_protein_sequences/gen3_merged_aligned.fasta', './data/spike_protein_sequences/gen3_merged_aligned.fasta', 'natural')
-    #remove_redundant_empty_residues('./data/spikeprot_0,452.afa', './data/spikeprot_final_dataset.afa')
-    # print(MuscleCommandline(path_to_muscle_executable,
-    #                   input='./data/random75_and_natural.fasta',
-    #                   out='./data/aligned_random75_and_natural.afa'))
-    print(MuscleCommandline(path_to_muscle_executable,
-                      input='./data/FC003_all_originl_and_natural.fasta',
-                      out='./data/FC033_all_original_and_natural.afa'))
-    #
-    # combine_two_databases(database1='./data/FC003_all_original.fasta',
-    #                       database2='./data/spike_protein_sequences/1_in_500_cleaned_aligned.afa',
-    #                       variant_database2='natural',
-    #                       outfile='./data/FC003_all_originl_and_natural.fasta')
-
-    # database_similarity('./data/spike_protein_sequences/spikeprot0112.fasta.cleaned',
-    #                     f'./data/FC003gen_high_intermediate_low.fasta', save_unique=True, outfile='./data/FC003_all_original.fasta')
-
-    # reduce_and_align_sequences('spikeprot0112.fasta', outfile='test', reduction_factor=1)
+    #database_similarity('./data/spike_protein_sequences/spikeprot_bigger_dataset.afa', './data/spike_protein_sequences/1_in_50_cleaned.fasta', save_unique=False, outfile=None)
+    # keep_top_N_most_common_sequences('./data/spike_protein_sequences/spikeprot_bigger_dataset.afa',
+    # #                                   './data/half_of_training_data.afa', 30000)
+    # remove_all_sequences_without_label('./data/spike_protein_sequences/half_of_training_data.afa',
+    #                                    './data/spike_protein_sequences/half_of_training_data_trimmed.afa')
+    # combine_two_databases('./data/generated_sequences/LanguageModel/11gram_original.fasta',
+    #                       variant_database1='language model',
+    #                       database2='./data/generated_sequences/Random75/random75_original.fasta',
+    #                       variant_database2='random mutator',
+    #                       outfile='./data/generated_sequences/language_model_and_random_mutator.fasta')
+    # combine_two_databases('./data/generated_sequences/language_model_and_random_mutator.fasta',
+    #                       database2='./data/generated_sequences/VAE/Version 4/gen4_merged.fasta',
+    #                       variant_database2='VAE model',
+    #                       outfile='./data/generated_sequences/all_generated_sequences_merged.fasta')
+    #check_all_sequences_have_same_length('./data/generated_sequences/all_generated_sequences_merged.fasta')
+    get_sequence_count_info('./data/generated_sequences/Random75/random75_original.fasta')
+    get_sequence_count_info('./data/generated_sequences/LanguageModel/11gram_original.fasta')
+    get_sequence_count_info('./data/generated_sequences/VAE/Version 4/gen4_merged.fasta')
 
 
 

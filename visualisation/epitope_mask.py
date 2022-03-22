@@ -98,7 +98,7 @@ def adjust_epitope_mask_to_aligned_database(reference_sequence, epitope_mask, al
         # if the sequence found is a subsequence of the reference then it is a match
         if stripped_sequence in reference_sequence:
             refined_epitope_mask = np.zeros(len(sequence))
-            indices_of_hyphens = np.char.find(sequence, '-')
+            indices_of_hyphens = np.array([pos for pos, char in enumerate(sequence) if char == '-'])
 
             # extend length of epitope mask by number of hyphens found
             for index, _ in enumerate(sequence):
