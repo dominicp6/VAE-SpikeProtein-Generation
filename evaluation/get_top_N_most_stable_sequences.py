@@ -37,9 +37,10 @@ if __name__ == "__main__":
 
     #foldername = 'gen2_point_mutations'
     #ddg_sum_file = 'ddg_sum_table.csv'
-    foldername = '11gram_point_mutations'
+    #foldername = '11gram_point_mutations'
     #foldername = 'random75_point_mutations'
     #foldername = 'gen3_point_mutations'
+    foldername = 'gen4_point_mutations'
     ddg_sum_file = foldername + '_ddg_sum_table.csv'
 
     get_top_N_most_stable_sequences('./' + foldername, ddg_sum_file, 10)

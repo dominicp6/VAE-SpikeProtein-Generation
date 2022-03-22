@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e8e13fc1-3229-43d5-aec0-040c3410f734" name="Changes" comment="amazing pandas script">
+    <list default="true" id="cf1bc430-792f-4364-8f89-a9163791ace9" name="Changes" comment="batches">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/get_delta_delta_G.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/get_delta_delta_G.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evaluation/get_top_N_most_stable_sequences.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/get_top_N_most_stable_sequences.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/seqs_10_03_2022.rar" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,6 +105,9 @@
       <module name="VAE-SpikeProtein-Generation" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/evaluation" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -162,6 +168,9 @@
       <module name="VAE-SpikeProtein-Generation" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/evaluation" />
       <option name="IS_MODULE_SDK" value="true" />
