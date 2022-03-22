@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+369_reference.fasta	R219E	-1.4	-1.4

@@ -18,10 +18,11 @@ if __name__ == "__main__":
 
     ddg_sum_dict={}
     #foldername = 'gen2_point_mutations'
-    foldername = 'gen3_point_mutations'
+    #foldername = 'gen3_point_mutations'
     #foldername = '11gram_point_mutations'
     #foldername = 'random75_point_mutations'
-    for seq_number in range(117):
+    foldername = 'gen4_point_mutations'
+    for seq_number in range(601):
         filename = './' + foldername +'/'+ str(seq_number)+'.txt'
         ddg_sum = get_delta_delta_g_from_file(filename)
         ddg_sum_dict[str(seq_number)] = ddg_sum

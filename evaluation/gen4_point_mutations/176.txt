@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+176_reference.fasta	T315I	2.4	2.4

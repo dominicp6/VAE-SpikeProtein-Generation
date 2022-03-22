@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+494_reference.fasta	L18F	0.1	0.1

@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+356_reference.fasta	I13S	-5.7	-5.7

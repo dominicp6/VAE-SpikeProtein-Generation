@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+167_reference.fasta	F71H	-1.1	-1.1

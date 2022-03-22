@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+302_reference.fasta	S26P	-0.9	-0.9

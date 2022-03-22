@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+396_reference.fasta	T732I	0.0	0.0

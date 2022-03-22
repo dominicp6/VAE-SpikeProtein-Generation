@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+198_reference.fasta	I266T	-0.0	-0.0

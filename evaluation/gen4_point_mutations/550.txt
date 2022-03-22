@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+550_reference.fasta	H70I	0.4	0.4

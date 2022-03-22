@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+291_reference.fasta	S113L	-0.4	-0.4
