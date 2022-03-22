@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+551_reference.fasta	H697P	-1.1	-1.1

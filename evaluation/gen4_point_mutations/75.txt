@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+75_reference.fasta	T1043I	0.3	0.3

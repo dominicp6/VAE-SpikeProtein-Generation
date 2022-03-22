@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+500_reference.fasta	D586A	0.4	0.4

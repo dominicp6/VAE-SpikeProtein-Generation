@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+587_reference.fasta	R160S	-0.6	-0.6

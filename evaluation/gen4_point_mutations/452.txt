@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+452_reference.fasta	I71H	-1.8	-1.8

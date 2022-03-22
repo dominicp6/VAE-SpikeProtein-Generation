@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+86_reference.fasta	Q973R	-0.2	-0.2

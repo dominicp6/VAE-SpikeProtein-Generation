@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+261_reference.fasta	D1274E	0.1	0.1

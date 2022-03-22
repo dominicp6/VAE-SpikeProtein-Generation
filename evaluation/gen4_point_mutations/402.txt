@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+402_reference.fasta	V71I	-0.4	-0.4

@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+69_reference.fasta	Y812D	-1.5	-1.5

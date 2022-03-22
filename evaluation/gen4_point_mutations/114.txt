@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+114_reference.fasta	D1134H	0.9	0.9

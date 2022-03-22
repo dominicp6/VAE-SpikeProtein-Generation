@@ -1,0 +1,3 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+272_reference.fasta	R19T	-1.4	-1.4
+272_reference.fasta	N517Y	1.2	1.2

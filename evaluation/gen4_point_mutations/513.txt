@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+513_reference.fasta	L5F	-1.6	-1.6

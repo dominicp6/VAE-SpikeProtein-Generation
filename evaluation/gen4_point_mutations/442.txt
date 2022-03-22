@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+442_reference.fasta	D966N	0.3	0.3

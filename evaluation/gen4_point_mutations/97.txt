@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+97_reference.fasta	K570E	0.6	0.6

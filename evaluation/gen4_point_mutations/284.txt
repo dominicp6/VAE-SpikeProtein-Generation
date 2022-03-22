@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+284_reference.fasta	V158E	-0.8	-0.8

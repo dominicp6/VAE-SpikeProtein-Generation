@@ -1,0 +1,2 @@
+#SEQFILE	VARIANT	S_DDG	T_DDG
+340_reference.fasta	V277G	-2.4	-2.4
