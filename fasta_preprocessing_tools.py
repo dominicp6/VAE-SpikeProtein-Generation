@@ -2,6 +2,7 @@
 This script provides functions which preprocess fasta datafiles by removing incomplete sequences,
 collecting repeats, labelling with variant names, and aligning misaligned sequences with MUSCLE.
 """
+import random
 
 import pandas as pd
 from Bio import SeqIO, pairwise2
@@ -10,6 +11,7 @@ from collections import defaultdict
 import os
 import numpy as np
 from tqdm import tqdm
+import itertools
 
 script_dir = os.path.dirname(os.path.realpath(__file__))  # path to this file (DO NOT CHANGE)
 
@@ -22,6 +24,37 @@ data_dir = os.path.join(script_dir, "data", "spike_protein_sequences")
 
 def _get_substring(string, mask):
     return "".join([char for index, char in enumerate(string) if mask[index] is False])
+
+
+def rescale_counts_based_on_reference_label(database, outfile, reference_label, number_of_reference_sequences):
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    counts = defaultdict(list)
+
+    for seq in db_seq:
+        count = int(seq.id.split('|')[0])
+        label = '|'.join(seq.id.split('|')[1:])
+        counts[label].append(count)
+
+    total_counts = {label: sum(sorted(count_list, reverse=True)[0:number_of_reference_sequences])
+                        for label, count_list in counts.items()}
+    labels_of_reference = [label for label in counts.keys() if reference_label in label]
+    reference_counts = sum([total_counts[label] for label in labels_of_reference])
+
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    with open(outfile, "w") as out_file:
+        for seq in db_seq:
+            if reference_label in seq.id:
+                print(f">{seq.id}", file=out_file)
+                print(seq.seq, file=out_file)
+            else:
+                count = int(seq.id.split('|')[0])
+                label = "|".join(seq.id.split('|')[1:])
+                adjusted_count = int(count * reference_counts/total_counts[label])
+                new_id = str(adjusted_count)+'|'+label
+                print(f">{new_id}", file=out_file)
+                print(seq.seq, file=out_file)
 
 
 def remove_redundant_empty_residues(database, outfile):
@@ -41,6 +74,31 @@ def remove_redundant_empty_residues(database, outfile):
         for seq in db_seq:
             print(f">{seq.id}", file=out_file)
             print(_get_substring(seq.seq, remove_by_residue_mask), file=out_file)
+
+
+def remove_empty_residues(database, outfile):
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    with open(outfile, "w") as out_file:
+        for seq in db_seq:
+            print(f">{seq.id}", file=out_file)
+            print(seq.seq.replace("-", ""), file=out_file)
+
+
+
+def randomise_database(database, outfile):
+    db_seq = SeqIO.parse(database, 'fasta')
+
+    sequences = []
+    for seq in db_seq:
+        sequences.append((seq.id, seq.seq))
+
+    random.shuffle(sequences)
+
+    with open(outfile, "w") as out_file:
+        for seq_tuple in sequences:
+            print(f"f>{seq_tuple[0]}", file=out_file)
+            print(seq_tuple[1], file=out_file)
 
 
 def check_all_sequences_have_same_length(database):
@@ -457,24 +515,37 @@ def reduce_and_align_sequences(infile: str,
 
 if __name__ == "__main__":
     #database_similarity('./data/spike_protein_sequences/spikeprot_bigger_dataset.afa', './data/spike_protein_sequences/1_in_50_cleaned.fasta', save_unique=False, outfile=None)
-    # keep_top_N_most_common_sequences('./data/spike_protein_sequences/spikeprot_bigger_dataset.afa',
-    # #                                   './data/half_of_training_data.afa', 30000)
+    # keep_top_N_most_common_sequences('./data/spike_protein_sequences/half_of_training_data_trimmed.afa',
+    #                                  './data/most_common_natural_4k.fasta', 4000)
     # remove_all_sequences_without_label('./data/spike_protein_sequences/half_of_training_data.afa',
     #                                    './data/spike_protein_sequences/half_of_training_data_trimmed.afa')
-    # combine_two_databases('./data/generated_sequences/LanguageModel/11gram_original.fasta',
+    # combine_two_databases('./data/generated_sequences/LanguageModel/random_11gram_top_2730',
     #                       variant_database1='language model',
-    #                       database2='./data/generated_sequences/Random75/random75_original.fasta',
+    #                       database2='./data/generated_sequences/Random75/random_mutator_top_2730',
     #                       variant_database2='random mutator',
-    #                       outfile='./data/generated_sequences/language_model_and_random_mutator.fasta')
-    # combine_two_databases('./data/generated_sequences/language_model_and_random_mutator.fasta',
-    #                       database2='./data/generated_sequences/VAE/Version 4/gen4_merged.fasta',
+    #                       outfile='./data/generated_sequences/language_model_and_random_mutator_big.fasta')
+    # combine_two_databases('./data/generated_sequences/language_model_and_random_mutator_big.fasta',
+    #                       database2='./data/generated_sequences/VAE/Version 4/gen4_merged_conserved_regions.afa',
     #                       variant_database2='VAE model',
-    #                       outfile='./data/generated_sequences/all_generated_sequences_merged.fasta')
+    #                       outfile='./data/generated_sequences/all_generated_sequences_merged_big.fasta')
     #check_all_sequences_have_same_length('./data/generated_sequences/all_generated_sequences_merged.fasta')
-    get_sequence_count_info('./data/generated_sequences/Random75/random75_original.fasta')
-    get_sequence_count_info('./data/generated_sequences/LanguageModel/11gram_original.fasta')
-    get_sequence_count_info('./data/generated_sequences/VAE/Version 4/gen4_merged.fasta')
-
-
+    # get_sequence_count_info('./data/generated_sequences/Random75/random75_original.fasta')
+    # get_sequence_count_info('./data/generated_sequences/LanguageModel/11gram_original.fasta')
+    # get_sequence_count_info('./data/generated_sequences/VAE/Version 4/gen4_merged_conserved_regions.afa')
+    # print(MuscleCommandline(path_to_muscle_executable,
+    #                   input='./gen_all_big_0,5.fasta',
+    #                   out='./gen_all_big_0.afa'))
+    # partition_fasta_database_into_chunks('./gen_all_big_2.afa',
+    #                                      1000,
+    #                                      'gen_all_big_2')
+    # remove_redundant_empty_residues('./data/most_common_natural.fasta', './data/most_common_natural.fasta')
+    # remove_redundant_empty_residues('./data/most_common_natural_4k.fasta', './data/most_common_natural_4k.fasta')
+    # remove_empty_residues('./data/gen_and_natural_visualisation_1.fasta', './data/gen_and_natural_visualisation_1.fasta')
+    # randomise_database('./data/gen_and_natural_visualisation_1.fasta', './data/gen_and_natural_visualisation_1_.fasta')
+    #partition_fasta_database_into_chunks('./data/gen_and_natural_visualisation_1_.fasta', 1000, './data/gen_and_natural_1_chunk_')
+    rescale_counts_based_on_reference_label('./data/spike_protein_sequences/gan0,5.afa',
+                                            './data/spike_protein_sequences/gan0,5_normalised.afa',
+                                            'natural',
+                                            1000)
 
 

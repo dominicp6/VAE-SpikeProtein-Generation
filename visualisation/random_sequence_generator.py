@@ -113,20 +113,20 @@ if __name__ == "__main__":
 
     # n_gram_list = [11, 13, 15, 17]
     # for n in n_gram_list:
-    lm = generate_random_ngram_sequences("../data/spikeprot_final_dataset.afa",
-                                         # number of sequences to be generated (same as in experimental database)
-                                         71397,
-                                         # length of sequences to be generated (same as in experimental database)
-                                         1299,
-                                         # n gram number
-                                         n=11,
-                                         outfile=f'random_{11}gram_sequences_big')
+    # lm = generate_random_ngram_sequences("../data/data_for_training_language_model.afa",
+    #                                      # number of sequences to be generated (same as in experimental database)
+    #                                      71397,
+    #                                      # length of sequences to be generated (same as in experimental database)
+    #                                      1299,
+    #                                      # n gram number
+    #                                      n=11,
+    #                                      outfile=f'random_{11}gram_sequences_big')
     reduce_to_unique_sequences(infile=f"random_{11}gram_sequences_big",
                                outfile=f"random_{11}gram_sequences_big.unique",
-                               data_directory='./data')
+                               data_directory='.')
 
 
     # generate_randomly_mutated_sequences("../data/spikeprot_final_dataset.afa", 71397, "generated_with_random_mutations")
     # reduce_to_unique_sequences(infile=f"generated_with_random_mutations",
-    #                            outfile=f"generated_with_random_mutations_mutations.unique",
+    #                            outfile=f"generated_with_random_mutations.unique",
     #                            data_directory='.')

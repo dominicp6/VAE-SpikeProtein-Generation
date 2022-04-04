@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # relative path of datasets
     data_dir = script_dir + '/data/spike_protein_sequences/'
 
-    fasta_file = "../data/spike_protein_sequences/spikeprot_bigger_dataset.afa"
+    fasta_file = "../data/spike_protein_sequences/gan0,5.afa"
     fasta_sequences = SeqIO.parse(open(fasta_file), 'fasta')
 
     seq_length = 0
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         seq_length = max(seq_length, len(sequence))
         sequence_count = int(id_label.split('|')[0])
         try:
-            variant_name = id_label.split('|')[1]
+            variant_name = id_label.split('|')[2]
         except:
             variant_name = 'default'
         for position, letter in enumerate(sequence):

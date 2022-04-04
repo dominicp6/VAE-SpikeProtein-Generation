@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from amino_acid_encoding import ProteinSequenceEncoder
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
+from matplotlib.colors import LinearSegmentedColormap
 
 default_hyperparameters = \
     {'PCA': {'whiten': False},
@@ -149,22 +150,52 @@ class ProteinSequenceEmbedder:
 
         fig, ax = plt.subplots()
 
+        alpha = [0.25 if class_number != 2 else 0.05 for class_number in class_numbers]
+
+        x_natural = [self.embedding_data['embeddings'][idx][0] for idx in range(len(class_numbers))
+                     if class_numbers[idx] == 0]
+        y_natural = [self.embedding_data['embeddings'][idx][1] for idx in range(len(class_numbers))
+                     if class_numbers[idx] == 0]
+        natural_marker_sizes = [size for idx, size in enumerate(marker_sizes)
+                          if class_numbers[idx] == 0]
+        x_non_natural = [self.embedding_data['embeddings'][idx][0] for idx in range(len(class_numbers))
+                     if class_numbers[idx] != 0]
+        y_non_natural = [self.embedding_data['embeddings'][idx][1] for idx in range(len(class_numbers))
+                     if class_numbers[idx] != 0]
+        non_natural_marker_sizes = [size for idx, size in enumerate(marker_sizes)
+                          if class_numbers[idx] != 0]
+        non_natural_class_numbers = [class_numbers[idx] for idx in range(len(class_numbers)) if class_numbers[idx] != 0]
         # plot
-        scatter = ax.scatter(self.embedding_data['embeddings'][:, 0],
-                             self.embedding_data['embeddings'][:, 1],
-                             c=class_numbers,                 # variant class information
-                             s=marker_sizes,
-                             alpha=0.125,
-                             cmap=plt.get_cmap(color_map))
+        # scatter = ax.scatter(self.embedding_data['embeddings'][:, 0],
+        #                      self.embedding_data['embeddings'][:, 1],
+        #                      c=class_numbers,                 # variant class information
+        #                      s=marker_sizes,
+        #                      alpha=alpha,
+        #                      cmap=plt.get_cmap(color_map))
+
+
+
+        scatter1 = ax.scatter(x_natural,
+                   y_natural,
+                   s=natural_marker_sizes,
+                   alpha=0.05,
+                   color='black')
+        my_color_map = LinearSegmentedColormap.from_list("mycmap", [(227/256, 227/256, 30/256), (227/256,30/256,30/256), (34/256, 70/256, 152/256)])
+        scatter2 = ax.scatter(x_non_natural,
+                             y_non_natural,
+                             c=non_natural_class_numbers,                 # variant class information
+                             s=non_natural_marker_sizes,
+                             alpha=0.75,
+                             cmap=my_color_map)# plt.get_cmap(color_map))
 
         # legends
-        labels_legend = ax.legend(handles=scatter.legend_elements()[0],
-                                  labels=label_to_class_number.keys(),
+        labels_legend = ax.legend(handles=scatter2.legend_elements()[0],
+                                  labels=['random-mutator', 'language model', 'VAE model'],#label_to_class_number.keys(),
                                   loc="lower left",
                                   title="Variant")     # variant legend
-        #ax.add_artist(labels_legend)
-        #handles, size_labels = self._get_sizes_legend_handles_and_labels(marker_size, marker_size_power_scaling)
-        #plt.legend(handles, size_labels, loc="lower right", title="Frequency", labelspacing=2.5, borderpad=2, handletextpad=1.5)          # frequency legend
+        ax.add_artist(labels_legend)
+        handles, size_labels = self._get_sizes_legend_handles_and_labels(marker_size, marker_size_power_scaling)
+        plt.legend(handles, size_labels, loc="lower right", title="Frequency", labelspacing=2.5, borderpad=2, handletextpad=1.5)          # frequency legend
 
         # title, labels and aspect ratio
         ax.set_aspect('equal', 'datalim')
@@ -304,3 +335,16 @@ class ProteinSequenceEmbedder:
                                 axis_title_fontsize=axis_title_fontsize,
                                 legend_fontsize=legend_fontsize,
                                 legend_title_fontsize=legend_title_fontsize)
+
+
+if __name__== "__main__":
+    parent_dir = os.path.abspath('..')  # path to parent directory
+    data_dir = parent_dir + '/data'  # path to datasets
+
+    for method in ['tSNE', 'PCA']:
+        for encoding_type in ['BLOSUM62']:
+            embedder = ProteinSequenceEmbedder(encoding_type=encoding_type, embedding_type=method)
+            embedder.generate_embedding_map(infile='gan0,5.afa', marker_size=6, marker_size_power_scaling=4,
+                                            descriptor_number=3, color_map='tab20', save_image=True, hide_meta_data=True,
+                                            axis_fontsize=23, axis_title_fontsize=30, legend_fontsize=18,
+                                            legend_title_fontsize=20)
