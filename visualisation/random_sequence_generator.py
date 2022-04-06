@@ -56,7 +56,7 @@ def generate_completely_random_sequences(N, L, outfile):
             print(seq, file=f)
 
 
-def generate_randomly_mutated_sequences(database_infile, N, max_number_of_mutations, outfile):
+def generate_randomly_mutated_sequences(database_infile, N, outfile):
     canonical_amino_acid_order = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L",
                                   "K", "M", "F", "P", "S", "T", "W", "Y", "V", "-"]
     residue_distributions = defaultdict(
@@ -82,17 +82,24 @@ def generate_randomly_mutated_sequences(database_infile, N, max_number_of_mutati
 
     generated_sequences = []
     for seq_number in tqdm(range(N)):
-        num_mut = np.random.randint(0, max_number_of_mutations)
+        num_mut = np.round(np.random.exponential(scale=8.810980))
         sequence = random.choice(list_of_sequences)
         if num_mut == 0:
             generated_sequences.append(sequence)
         else:
-            indices_of_mutation_sites = random.sample(range(L), num_mut)
-            for index in indices_of_mutation_sites:
-                new_amino_acid = np.random.choice(canonical_amino_acid_order,
-                                                  p=normalised_residue_distribution[index])
-                sequence = "".join([residue if residue_index != index
-                                    else new_amino_acid for residue_index, residue in enumerate(sequence)])
+            num_mut_remaining = num_mut
+            forbidden_indices = []
+            while num_mut_remaining > 0:
+                mut_index = np.random.randint(0, L)
+                if mut_index not in forbidden_indices:
+                    old_amino_acid = sequence[mut_index]
+                    new_amino_acid = np.random.choice(canonical_amino_acid_order,
+                                                      p=normalised_residue_distribution[mut_index])
+                    if new_amino_acid != old_amino_acid:
+                        num_mut_remaining -= 1
+                        forbidden_indices.append(mut_index)
+                        sequence = "".join([residue if residue_index != mut_index else new_amino_acid for residue_index, residue in enumerate(sequence)])
+
             generated_sequences.append(sequence)
 
     with open(outfile, "w") as f:
@@ -106,19 +113,20 @@ if __name__ == "__main__":
 
     # n_gram_list = [11, 13, 15, 17]
     # for n in n_gram_list:
-    #     lm = generate_random_ngram_sequences("1_in_500_cleaned_aligned.afa",
-    #                                          8880,
-    #                                          # number of sequences to be generated (same as in experimental database)
-    #                                          1282,
-    #                                          # length of sequences to be generated (same as in experimental database)
-    #                                          n=n,  # n gram number
-    #                                          outfile=f'random_{n}gram_sequences')
-    #     reduce_to_unique_sequences(infile=f"random_{n}gram_sequences",
-    #                                outfile=f"random_{n}gram_sequences.unique",
-    #                                data_directory='.')
+    # lm = generate_random_ngram_sequences("../data/data_for_training_language_model.afa",
+    #                                      # number of sequences to be generated (same as in experimental database)
+    #                                      71397,
+    #                                      # length of sequences to be generated (same as in experimental database)
+    #                                      1299,
+    #                                      # n gram number
+    #                                      n=11,
+    #                                      outfile=f'random_{11}gram_sequences_big')
+    reduce_to_unique_sequences(infile=f"random_{11}gram_sequences_big",
+                               outfile=f"random_{11}gram_sequences_big.unique",
+                               data_directory='.')
 
 
-    # generate_randomly_mutated_sequences("1_in_500_cleaned_aligned.afa", 8880, 75, "generated_up_to_75_mutations")
-    # reduce_to_unique_sequences(infile=f"generated_up_to_75_mutations",
-    #                                 outfile=f"generated_up_to_75_mutations.unique",
-    #                                 data_directory='.')
+    # generate_randomly_mutated_sequences("../data/spikeprot_final_dataset.afa", 71397, "generated_with_random_mutations")
+    # reduce_to_unique_sequences(infile=f"generated_with_random_mutations",
+    #                            outfile=f"generated_with_random_mutations.unique",
+    #                            data_directory='.')

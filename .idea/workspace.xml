@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cf1bc430-792f-4364-8f89-a9163791ace9" name="Changes" comment="add alphafold results for consensus sequences and gen4 point mutations">
+    <list default="true" id="440a240c-7d28-4046-b494-f3c425622281" name="Changes" comment="changed random mutator model">
+      <change afterPath="$PROJECT_DIR$/data/all_VAE.fasta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/gen_and_natural_visualisation_2.fasta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/most_common_language.fasta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/most_common_random.fasta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gen_all_big_0.fasta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/merge_alignments.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/VAE-SpikeProtein-Generation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/VAE-SpikeProtein-Generation.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/13_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/19_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/22_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/2_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/35_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/40_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/45_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/4_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/82_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/11gram_point_mutations_10_most_stable/87_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/alpha/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/beta/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/delta/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/epsilon/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/gamma/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/omicron_ba1/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/consensus_sequences/consensus_sequences/wuhan/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/174_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/237_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/307_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/356_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/379_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/387_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/391_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/434_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/480_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen4_point_mutations_10_most_stable/gen4_point_mutations_10_most_stable/522_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/0_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/13_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/41_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/48_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/50_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/54_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/59_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/78_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/82_synthetic/ranked_0.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/random75_point_mutations_10_most_stable/96_synthetic/ranked_0.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/generated_sequences/LanguageModel/11gram_original.fasta" beforeDir="false" afterPath="$PROJECT_DIR$/data/generated_sequences/LanguageModel/11gram_original.fasta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/spike_protein_sequences/partitioned_database/merge_alignments.sh" beforeDir="false" afterPath="$PROJECT_DIR$/data/spike_protein_sequences/partitioned_database/merge_alignments.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/10_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/10_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/11_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/11_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/12_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/12_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/14_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/14_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/15_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/15_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/17_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/17_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/18_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/18_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/20_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/20_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/29_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/29_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/31_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/31_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/32_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/32_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/35_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/35_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/36_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/36_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/37_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/37_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/40_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/40_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/41_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/41_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/42_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/42_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/84_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/84_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/87_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/87_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/batch-1/88_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen1_point_mutations_10_most_stable/88_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/12_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/12_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/13_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/13_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/14_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/14_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/15_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/15_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/16_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/16_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/17_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/17_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/23_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/23_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/32_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/32_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/33_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/33_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation/alphafold_pdb/synthetic2_point_mutations_10_most_stable/35_synthetic/ranked_0.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation/alphafold_pdb/gen2_point_mutations_10_most_stable/35_synthetic/ranked_0.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fasta_preprocessing_tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/fasta_preprocessing_tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualisation/2D_protein_map.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/visualisation/2D_protein_map.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualisation/ProteinSequenceEmbedder.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualisation/ProteinSequenceEmbedder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualisation/random_sequence_generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualisation/random_sequence_generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visualisation/residue_conservation_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/visualisation/residue_conservation_plot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,12 +57,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Jupyter Notebook" />
         <option value="Python Script" />
+        <option value="package.json" />
       </list>
     </option>
-  </component>
-  <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/master" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -67,129 +74,38 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/visualisation/ddgun_seq.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/prepend_line.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/visualisation/epitope_mask.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/get_point_mutation_list.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/run_DDun.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/get_delta_delta_G.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/run_DDGun.sh" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/get_top_N_most_stable_sequences.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/visualisation/identify_variants_of_concern.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/evaluation/filter_by_conserved_regions.py" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProjectId" id="24F0xaKVcaanzTjVDmNXxIMQhxs" />
+  <component name="ProjectId" id="24BvHw3ZNZpz5sjUQOmbxdyZhQS" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ChangesTree.GroupingKeys" value="directory" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/visualisation" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\sebestyenkamp\OneDrive - University of Edinburgh\courses\sem2\cdt_group_project\VAE-SpikeProtein-Generation\visualisation" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$/data/spike_protein_sequences" />
+      <recent name="$PROJECT_DIR$/data/spike_protein_sequences/partitioned_database" />
+      <recent name="$PROJECT_DIR$/visualisation" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data/spike_protein_sequences" />
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$/data/generated_sequences/Random75" />
+      <recent name="$PROJECT_DIR$/data/generated_sequences/LanguageModel" />
+      <recent name="$PROJECT_DIR$/data/generated_sequences/LanguageModel/Non-optimal Models" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.get_top_N_most_stable_sequences">
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="VAE-SpikeProtein-Generation" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="get_delta_delta_G" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="VAE-SpikeProtein-Generation" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/evaluation" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/evaluation/get_delta_delta_G.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="get_point_mutation_list" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="VAE-SpikeProtein-Generation" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/evaluation" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/evaluation/get_point_mutation_list.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="get_top_N_most_stable_sequences" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="VAE-SpikeProtein-Generation" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/evaluation" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/evaluation/get_top_N_most_stable_sequences.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="identify_variants_of_concern" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.ProteinSequenceEmbedder">
+    <configuration name="ProteinSequenceEmbedder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="VAE-SpikeProtein-Generation" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -202,7 +118,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualisation/identify_variants_of_concern.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualisation/ProteinSequenceEmbedder.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -211,7 +127,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="prepend_line" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="evaluation_pipeline" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="VAE-SpikeProtein-Generation" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -224,188 +140,279 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/evaluation/prepend_line.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/evaluation/evaluation_pipeline.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="fasta_preprocessing_tools (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="VAE-SpikeProtein-Generation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/fasta_preprocessing_tools.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="random_sequence_generator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="VAE-SpikeProtein-Generation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/visualisation" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualisation/random_sequence_generator.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="residue_conservation_plot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="VAE-SpikeProtein-Generation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/visualisation" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualisation/residue_conservation_plot.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.fasta_preprocessing_tools (1)" />
+      <item itemvalue="Python.evaluation_pipeline" />
+      <item itemvalue="Python.random_sequence_generator" />
+      <item itemvalue="Python.ProteinSequenceEmbedder" />
+      <item itemvalue="Python.residue_conservation_plot" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.get_top_N_most_stable_sequences" />
-        <item itemvalue="Python.get_delta_delta_G" />
-        <item itemvalue="Python.prepend_line" />
-        <item itemvalue="Python.get_point_mutation_list" />
-        <item itemvalue="Python.identify_variants_of_concern" />
+        <item itemvalue="Python.ProteinSequenceEmbedder" />
+        <item itemvalue="Python.residue_conservation_plot" />
+        <item itemvalue="Python.fasta_preprocessing_tools (1)" />
+        <item itemvalue="Python.random_sequence_generator" />
+        <item itemvalue="Python.evaluation_pipeline" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="cf1bc430-792f-4364-8f89-a9163791ace9" name="Changes" comment="add alphafold results and ddgun files" />
-      <created>1643211275512</created>
+      <changelist id="440a240c-7d28-4046-b494-f3c425622281" name="Changes" comment="" />
+      <created>1643116711021</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1643211275512</updated>
-      <workItem from="1643211277446" duration="3259000" />
-      <workItem from="1643726273134" duration="1225000" />
-      <workItem from="1643732353643" duration="377000" />
-      <workItem from="1643736767155" duration="3102000" />
-      <workItem from="1643740930645" duration="2245000" />
-      <workItem from="1643743209109" duration="21664000" />
-      <workItem from="1643909665525" duration="1388000" />
-      <workItem from="1643970970455" duration="627000" />
-      <workItem from="1643990178953" duration="773000" />
-      <workItem from="1644161200004" duration="10259000" />
-      <workItem from="1644939178340" duration="769000" />
-      <workItem from="1646571887801" duration="22987000" />
-      <workItem from="1648544699378" duration="6092000" />
+      <updated>1643116711021</updated>
+      <workItem from="1643116713980" duration="9939000" />
+      <workItem from="1643132219872" duration="4658000" />
+      <workItem from="1643198988363" duration="590000" />
+      <workItem from="1643199589213" duration="352000" />
+      <workItem from="1643200124487" duration="650000" />
+      <workItem from="1643200785367" duration="9097000" />
+      <workItem from="1643219784231" duration="11071000" />
+      <workItem from="1643382348394" duration="1380000" />
+      <workItem from="1643645926739" duration="1260000" />
+      <workItem from="1643710231961" duration="7917000" />
+      <workItem from="1643723087971" duration="1153000" />
+      <workItem from="1643725784877" duration="7424000" />
+      <workItem from="1643819072261" duration="2955000" />
+      <workItem from="1643895111847" duration="32365000" />
+      <workItem from="1645196880408" duration="13305000" />
+      <workItem from="1645530011934" duration="4688000" />
+      <workItem from="1645544532945" duration="29349000" />
+      <workItem from="1646648421002" duration="18999000" />
+      <workItem from="1646760824581" duration="8084000" />
+      <workItem from="1647600237233" duration="9017000" />
+      <workItem from="1648471870358" duration="15130000" />
+      <workItem from="1648657672409" duration="599000" />
+      <workItem from="1648733061237" duration="25000" />
+      <workItem from="1648805942268" duration="1293000" />
     </task>
-    <task id="LOCAL-00001" summary="dssp and fasta to epitope mask, with median SASA">
-      <created>1643796645443</created>
+    <task id="LOCAL-00001" summary="MUSCLE script. Draft code for 2D protein map.">
+      <created>1643202859728</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1643796645443</updated>
+      <updated>1643202859728</updated>
     </task>
-    <task id="LOCAL-00002" summary="add 7n1u files as reference spike protein">
-      <created>1643796747150</created>
+    <task id="LOCAL-00002" summary="Simple protein map working.">
+      <created>1643218081647</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1643796747150</updated>
+      <updated>1643218081647</updated>
     </task>
-    <task id="LOCAL-00003" summary="align dssp with fasta">
-      <created>1643813265747</created>
+    <task id="LOCAL-00003" summary="UMAP, tSNE and PCA embeddings.">
+      <created>1643304374609</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1643813265747</updated>
+      <updated>1643304374609</updated>
     </task>
-    <task id="LOCAL-00004" summary="renamed wuhan fasta, identify variants progress">
-      <created>1643823853427</created>
+    <task id="LOCAL-00004" summary="finished pipeline for preprocessing data">
+      <created>1643723198949</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1643823853427</updated>
+      <updated>1643723198949</updated>
     </task>
-    <task id="LOCAL-00005" summary="identify variants of concern with the highest alignment scores to consensus sequences">
-      <created>1644177729922</created>
+    <task id="LOCAL-00005" summary="restructured directories">
+      <created>1643726160843</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1644177729922</updated>
+      <updated>1643726160843</updated>
     </task>
-    <task id="LOCAL-00006" summary="bugfix append not overwrite">
-      <created>1644232315646</created>
+    <task id="LOCAL-00006" summary="started work on epitope mask">
+      <created>1643732487365</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1644232315646</updated>
+      <updated>1643732487365</updated>
     </task>
-    <task id="LOCAL-00007" summary="ddgun subprocess init">
-      <created>1646585366895</created>
+    <task id="LOCAL-00007" summary="started fixing epitope mask code">
+      <created>1643822064108</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1646585366895</updated>
+      <updated>1643822064108</updated>
     </task>
-    <task id="LOCAL-00008" summary="sh file for ddgun">
-      <created>1646590379217</created>
+    <task id="LOCAL-00008" summary="finished epitope mask">
+      <created>1643898126086</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1646590379217</updated>
+      <updated>1643898126086</updated>
     </task>
-    <task id="LOCAL-00009" summary="erase files">
-      <created>1646657312734</created>
+    <task id="LOCAL-00009" summary="made amino_acid_encoding work with an epitope mask">
+      <created>1643901142812</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1646657312734</updated>
+      <updated>1643901142812</updated>
     </task>
-    <task id="LOCAL-00010" summary="ddgun bash command bugfix and upload ddgun results">
-      <created>1646676155743</created>
+    <task id="LOCAL-00010" summary="implemented normalisation and thresholding options for the epitope mask">
+      <created>1643901869323</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1646676155743</updated>
+      <updated>1643901869323</updated>
     </task>
-    <task id="LOCAL-00011" summary="evaluate ddgun results">
-      <created>1646683776117</created>
+    <task id="LOCAL-00011" summary="added aligned fasta data">
+      <created>1644238871711</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1646683776117</updated>
+      <updated>1644238871711</updated>
     </task>
-    <task id="LOCAL-00012" summary="correct synthetic fasta first line">
-      <created>1646832174860</created>
+    <task id="LOCAL-00012" summary="random sequences with language model and random substitution model">
+      <created>1645210629389</created>
       <option name="number" value="00012" />
       <option name="presentableId" value="LOCAL-00012" />
       <option name="project" value="LOCAL" />
-      <updated>1646832174860</updated>
+      <updated>1645210629389</updated>
     </task>
-    <task id="LOCAL-00013" summary="correct synthetic fasta first line">
-      <created>1646832263751</created>
+    <task id="LOCAL-00013" summary="merged muscle-aligned sequences">
+      <created>1646394910835</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1646832263751</updated>
+      <updated>1646394910835</updated>
     </task>
-    <task id="LOCAL-00014" summary="add random and 11gram">
-      <created>1646832439067</created>
+    <task id="LOCAL-00014" summary="final dataset">
+      <created>1646648494617</created>
       <option name="number" value="00014" />
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
-      <updated>1646832439067</updated>
+      <updated>1646648494617</updated>
     </task>
-    <task id="LOCAL-00015" summary="unversioned files">
-      <created>1646832506438</created>
+    <task id="LOCAL-00015" summary="point mutation files">
+      <created>1646654483649</created>
       <option name="number" value="00015" />
       <option name="presentableId" value="LOCAL-00015" />
       <option name="project" value="LOCAL" />
-      <updated>1646832506439</updated>
+      <updated>1646654483649</updated>
     </task>
-    <task id="LOCAL-00016" summary="ddgun and ddg results">
-      <created>1646927722868</created>
+    <task id="LOCAL-00016" summary="fixed fasta formatting">
+      <created>1646657884772</created>
       <option name="number" value="00016" />
       <option name="presentableId" value="LOCAL-00016" />
       <option name="project" value="LOCAL" />
-      <updated>1646927722868</updated>
+      <updated>1646657884772</updated>
     </task>
-    <task id="LOCAL-00017" summary="amazing pandas script">
-      <created>1646933167018</created>
+    <task id="LOCAL-00017" summary="fixed fasta formatting">
+      <created>1646663181981</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1646933167018</updated>
+      <updated>1646663181981</updated>
     </task>
-    <task id="LOCAL-00018" summary="add alphafold results and ddgun files">
-      <created>1647951678233</created>
+    <task id="LOCAL-00018" summary="fasta preprocessing fix, add random and 11gram">
+      <created>1646831737925</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1647951678233</updated>
+      <updated>1646831737925</updated>
     </task>
-    <task id="LOCAL-00019" summary="add alphafold results and ddgun files">
-      <created>1647951754891</created>
+    <task id="LOCAL-00019" summary="removed non-original seqs from ddgun table. made script for getting most stable DDGun seqs.">
+      <created>1646931756212</created>
       <option name="number" value="00019" />
       <option name="presentableId" value="LOCAL-00019" />
       <option name="project" value="LOCAL" />
-      <updated>1647951754891</updated>
+      <updated>1646931756212</updated>
     </task>
-    <task id="LOCAL-00020" summary="add alphafold results for consensus sequences and gen4 point mutations">
-      <created>1648544858901</created>
+    <task id="LOCAL-00020" summary="added some data files to git ignore">
+      <created>1647600387020</created>
       <option name="number" value="00020" />
       <option name="presentableId" value="LOCAL-00020" />
       <option name="project" value="LOCAL" />
-      <updated>1648544858901</updated>
+      <updated>1647600387020</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="refactored location of generated data files">
+      <created>1647601497665</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1647601497665</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -421,31 +428,47 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="dssp and fasta to epitope mask, with median SASA" />
-    <MESSAGE value="add 7n1u files as reference spike protein" />
-    <MESSAGE value="align dssp with fasta" />
-    <MESSAGE value="renamed wuhan fasta, identify variants progress" />
-    <MESSAGE value="identify variants of concern with the highest alignment scores to consensus sequences" />
-    <MESSAGE value="bugfix append not overwrite" />
-    <MESSAGE value="ddgun subprocess init" />
-    <MESSAGE value="sh file for ddgun" />
-    <MESSAGE value="erase files" />
-    <MESSAGE value="ddgun bash command bugfix and upload ddgun results" />
-    <MESSAGE value="evaluate ddgun results" />
-    <MESSAGE value="correct synthetic fasta first line" />
-    <MESSAGE value="add random and 11gram" />
-    <MESSAGE value="unversioned files" />
-    <MESSAGE value="ddgun and ddg results" />
-    <MESSAGE value="amazing pandas script" />
-    <MESSAGE value="add alphafold results and ddgun files" />
-    <MESSAGE value="add alphafold results for consensus sequences and gen4 point mutations" />
-    <option name="LAST_COMMIT_MESSAGE" value="add alphafold results for consensus sequences and gen4 point mutations" />
+    <MESSAGE value="MUSCLE script. Draft code for 2D protein map." />
+    <MESSAGE value="Simple protein map working." />
+    <MESSAGE value="UMAP, tSNE and PCA embeddings." />
+    <MESSAGE value="finished pipeline for preprocessing data" />
+    <MESSAGE value="restructured directories" />
+    <MESSAGE value="started work on epitope mask" />
+    <MESSAGE value="started fixing epitope mask code" />
+    <MESSAGE value="finished epitope mask" />
+    <MESSAGE value="made amino_acid_encoding work with an epitope mask" />
+    <MESSAGE value="implemented normalisation and thresholding options for the epitope mask" />
+    <MESSAGE value="added aligned fasta data" />
+    <MESSAGE value="random sequences with language model and random substitution model" />
+    <MESSAGE value="merged muscle-aligned sequences" />
+    <MESSAGE value="final dataset" />
+    <MESSAGE value="point mutation files" />
+    <MESSAGE value="fixed fasta formatting" />
+    <MESSAGE value="fasta preprocessing fix, add random and 11gram" />
+    <MESSAGE value="removed non-original seqs from ddgun table. made script for getting most stable DDGun seqs." />
+    <MESSAGE value="added some data files to git ignore" />
+    <MESSAGE value="refactored location of generated data files" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored location of generated data files" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$epitope_mask.coverage" NAME="epitope_mask Coverage Results" MODIFIED="1643910697968" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
-    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$identify_variants_of_concern.coverage" NAME="identify_variants_of_concern Coverage Results" MODIFIED="1644224442869" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
-    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$test.coverage" NAME="test Coverage Results" MODIFIED="1643739883186" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$analyse_mutation_distribution.coverage" NAME="analyse_mutation_distribution Coverage Results" MODIFIED="1647944814170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$random_sequence_generator.coverage" NAME="random_sequence_generator Coverage Results" MODIFIED="1647968435592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$evaluation_pipeline.coverage" NAME="evaluation_pipeline Coverage Results" MODIFIED="1647626249364" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/evaluation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$ProteinSequenceEmbedder.coverage" NAME="ProteinSequenceEmbedder Coverage Results" MODIFIED="1648567528723" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$data_cleaner.coverage" NAME="data_cleaner Coverage Results" MODIFIED="1643374868925" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$prepend_line.coverage" NAME="prepend_line Coverage Results" MODIFIED="1646658233325" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/evaluation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$amino_acid_encoding.coverage" NAME="amino_acid_encoding Coverage Results" MODIFIED="1643900543172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$get_top_N_most_stable_sequences.coverage" NAME="get_top_N_most_stable_sequences Coverage Results" MODIFIED="1646931688071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/evaluation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$test.coverage" NAME="test Coverage Results" MODIFIED="1645553557170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$get_point_mutation_list.coverage" NAME="get_point_mutation_list Coverage Results" MODIFIED="1646763796295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/evaluation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$epitope_mask.coverage" NAME="epitope_mask Coverage Results" MODIFIED="1643901756843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$identify_variants_of_concern.coverage" NAME="identify_variants_of_concern Coverage Results" MODIFIED="1644254768458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$residue_conservation_plot.coverage" NAME="residue_conservation_plot Coverage Results" MODIFIED="1648558930182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/visualisation" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$muscle.coverage" NAME="muscle Coverage Results" MODIFIED="1643374880138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$fasta_preprocessing_tools__1_.coverage" NAME="fasta_preprocessing_tools (1) Coverage Results" MODIFIED="1648477143901" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/VAE_SpikeProtein_Generation$filter_by_conserved_regions.coverage" NAME="filter_by_conserved_regions Coverage Results" MODIFIED="1646763542782" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/evaluation" />
   </component>
 </project>
